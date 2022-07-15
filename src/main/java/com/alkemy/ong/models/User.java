@@ -7,15 +7,13 @@ import javax.persistence.*;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.UUID;
 
-@Getter
-@Setter
-@ToString
-@NoArgsConstructor
 @Entity
+@Data
 @Table(name = "users")
-@SQLDelete(sql = "UPDATE table_product SET deleted = true WHERE id=?")
+@SQLDelete(sql = "UPDATE users SET deleted = true WHERE id=?")
 @Where(clause = "deleted=false")
 public class User {
 
@@ -41,7 +39,7 @@ public class User {
 
     @ManyToMany
     @JoinColumn(name = "roleId")
-    private Role role;
+    private List<Role> role;
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
@@ -53,12 +51,4 @@ public class User {
 
     private Boolean deleted = false;
 
-    public User(String firstName, String lastName, String email, String password, String photo, Role role) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.password = password;
-        this.photo = photo;
-        this.role = role;
-    }
 }
