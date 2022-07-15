@@ -21,7 +21,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "MEMBERS")
-@SQLDelete(sql = "UPDATE users SET deleted = true WHERE id=?")
+@SQLDelete(sql = "UPDATE MEMBERS SET deleted = true WHERE id=?")
 @Where(clause = "deleted=false")
 public class Member {
 
