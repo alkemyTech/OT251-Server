@@ -13,7 +13,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name= "organizations")
-public class organizacion_models {
+public class OrganizationModel {
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -33,7 +33,8 @@ public class organizacion_models {
      private String aboutUsText;
      @Column
      @Temporal(TemporalType.TIMESTAMP)
-     private Date  timestamps;
+     private Date timestamps;
+     @Column(nullable = false)
      private boolean softDelete;
 
     
