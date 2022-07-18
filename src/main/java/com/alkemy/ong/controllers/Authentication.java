@@ -1,4 +1,4 @@
-package com.alkemy.ong.controller;
+package com.alkemy.ong.controllers;
 
 import javax.validation.Valid;
 
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.alkemy.ong.dto.request.user.UserRegisterRequest;
 import com.alkemy.ong.dto.response.user.UserResponse;
 import com.alkemy.ong.exception.EmailAlreadyExistsException;
-import com.alkemy.ong.service.IUserService;
+import com.alkemy.ong.services.IUserService;
 
 @RestController
 @RequestMapping("/auth")
