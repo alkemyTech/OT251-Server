@@ -15,11 +15,10 @@ import java.util.UUID;
 public class Role {
 
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "UUID2")
+    @GeneratedValue
     private UUID id;
 
-    @Column(nullable = false)
+    @Column(nullable = false,length = 30)
     private String name;
 
     private String description;
