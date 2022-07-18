@@ -2,25 +2,32 @@ package com.alkemy.ong.models;
 
 
 import java.util.Date;
+import java.util.UUID;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.GenericGenerator;
+
+import lombok.Data;
+
+@Data
 @Entity
 @Table(name= "organizations")
 public class organizacion_models {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(unique = true, nullable = false)
-
-     private long id;
-     
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "UUID2")
+    private UUID id;
+     @Column(nullable = false)
      private String name;
+     @Column(nullable = false)
      private String image;
      private String address;
      private int phone;
+     @Column(nullable = false)
      private String email;
-     @Column(columnDefinition = "TEXT")
+     @Column(columnDefinition = "TEXT",nullable = false)
      private String welcomeText;
      @Column(columnDefinition = "TEXT")
      private String aboutUsText;
@@ -29,66 +36,7 @@ public class organizacion_models {
      private Date  timestamps;
      private boolean softDelete;
 
-     public long getId() {
-        return id;
-    }
-    public void setId(long id) {
-        this.id = id;
-    }
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
-    public String getImage() {
-        return image;
-    }
-    public void setImage(String image) {
-        this.image = image;
-    }
-    public String getAddress() {
-        return address;
-    }
-    public void setAddress(String address) {
-        this.address = address;
-    }
-    public int getPhone() {
-        return phone;
-    }
-    public void setPhone(int phone) {
-        this.phone = phone;
-    }
-    public String getEmail() {
-        return email;
-    }
-    public void setEmail(String email) {
-        this.email = email;
-    }
-    public String getWelcomeText() {
-        return welcomeText;
-    }
-    public void setWelcomeText(String welcomeText) {
-        this.welcomeText = welcomeText;
-    }
-    public String getAboutUsText() {
-        return aboutUsText;
-    }
-    public void setAboutUsText(String aboutUsText) {
-        this.aboutUsText = aboutUsText;
-    }
-    public Date getTimestamps() {
-        return timestamps;
-    }
-    public void setTimestamps(Date timestamps) {
-        this.timestamps = timestamps;
-    }
-    public boolean isSoftDelete() {
-        return softDelete;
-    }
-    public void setSoftDelete(boolean softDelete) {
-        this.softDelete = softDelete;
-    }
+    
     
     
 }
