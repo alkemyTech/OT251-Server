@@ -1,4 +1,4 @@
-package com.alkemy.ong.service.imp;
+package com.alkemy.ong.services.imp;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,7 +9,7 @@ import com.alkemy.ong.dto.response.user.UserResponse;
 import com.alkemy.ong.exception.EmailAlreadyExistsException;
 import com.alkemy.ong.models.User;
 import com.alkemy.ong.repositories.UserRepository;
-import com.alkemy.ong.service.IUserService;
+import com.alkemy.ong.services.IUserService;
 
 @Service
 public class UserServiceImp implements IUserService {

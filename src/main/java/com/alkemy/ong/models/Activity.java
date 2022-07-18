@@ -29,7 +29,7 @@ public class Activity {
 	@GenericGenerator(name = "UUID", strategy = "UUID2")
 	private UUID id;
 
-	@Column(nullable = false)
+	@Column(nullable = false, length = 60)
 	private String name;
 
 	@Column(nullable = false, columnDefinition = "TEXT")
