@@ -1,4 +1,4 @@
-package com.alkemy.ong.service;
+package com.alkemy.ong.services;
 
 import com.alkemy.ong.dto.request.user.UserRegisterRequest;
 import com.alkemy.ong.dto.response.user.UserResponse;

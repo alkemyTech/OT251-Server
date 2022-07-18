@@ -30,13 +30,16 @@ public class Member {
 	@GenericGenerator(name = "UUID", strategy = "UUID2")
 	private UUID id;
 
-	@Column(nullable = false)
+	@Column(nullable = false, length = 50)
 	private String name;
-
+	
+	@Column(name = "facebook_url")
 	private String facebookUrl;
-
+	
+	@Column(name = "instagram_url")
 	private String instagramUrl;
 
+	@Column(name = "linkedin_url")
 	private String linkedinUrl;
 
 	@Column(nullable = false)
