@@ -10,7 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.Where;
@@ -19,14 +18,13 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "ACTIVITIES")
-@SQLDelete(sql = "UPDATE ACTIVITIES SET deleted = true WHERE id=?")
+@Table(name = "activities")
+@SQLDelete(sql = "UPDATE activities SET deleted = true WHERE id=?")
 @Where(clause = "deleted=false")
 public class Activity {
 
 	@Id
-	@GeneratedValue(generator = "UUID")
-	@GenericGenerator(name = "UUID", strategy = "UUID2")
+	@GeneratedValue
 	private UUID id;
 
 	@Column(nullable = false, length = 60)
@@ -45,5 +43,5 @@ public class Activity {
 	private Timestamp updateAt;
 
 	@Column(name = "soft_delete")
-	private boolean softDelete = false;
+	private boolean deleted = false;
 }
