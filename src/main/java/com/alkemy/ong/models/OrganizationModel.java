@@ -15,8 +15,8 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name= "organizations")
-@SQLDelete(sql = "UPDATE organizations SET deleted = true WHERE id=?")
-@Where(clause = "deleted=false")
+@SQLDelete(sql = "UPDATE organizations SET softDelete = true WHERE id=?")
+@Where(clause = "softDelete=false")
 public class OrganizationModel {
 
     @Id
