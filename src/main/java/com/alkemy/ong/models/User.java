@@ -18,8 +18,7 @@ import java.util.UUID;
 public class User {
 
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "UUID2")
+    @GeneratedValue
     private UUID id;
 
     @Column(nullable = false)
@@ -38,7 +37,7 @@ public class User {
 
     @ManyToMany
     @JoinColumn(name = "roleId")
-    private List<Role> role;
+    private List<Role> roles;
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
