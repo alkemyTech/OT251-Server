@@ -7,12 +7,16 @@ import java.util.UUID;
 import javax.persistence.*;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import lombok.Data;
 
 @Data
 @Entity
 @Table(name= "organizations")
+@SQLDelete(sql = "UPDATE organizations SET deleted = true WHERE id=?")
+@Where(clause = "deleted=false")
 public class OrganizationModel {
 
     @Id
@@ -35,7 +39,7 @@ public class OrganizationModel {
      @Temporal(TemporalType.TIMESTAMP)
      private Date timestamps;
      @Column(nullable = false)
-     private boolean softDelete;
+     private boolean softDelete = false;
 
     
     
