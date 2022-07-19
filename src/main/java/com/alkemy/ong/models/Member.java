@@ -20,14 +20,13 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "MEMBERS")
-@SQLDelete(sql = "UPDATE MEMBERS SET deleted = true WHERE id=?")
+@Table(name = "members")
+@SQLDelete(sql = "UPDATE members SET deleted = true WHERE id=?")
 @Where(clause = "deleted=false")
 public class Member {
 
 	@Id
-	@GeneratedValue(generator = "UUID")
-	@GenericGenerator(name = "UUID", strategy = "UUID2")
+	@GeneratedValue
 	private UUID id;
 
 	@Column(nullable = false, length = 50)
@@ -53,7 +52,6 @@ public class Member {
 	@UpdateTimestamp
 	private Timestamp updateAt;
 
-	@Column(name = "soft_delete")
-	private boolean softDelete = false;
+	private boolean deleted = false;
 
 }
