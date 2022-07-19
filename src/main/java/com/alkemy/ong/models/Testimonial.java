@@ -9,7 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.Where;
@@ -22,11 +21,10 @@ import org.hibernate.annotations.Where;
 public class Testimonial {
     
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "UUID2")
+    @GeneratedValue
     private UUID id;
     
-    @Column (nullable = false)
+    @Column (nullable = false, length = 50)
     private String name;
     
     @Column (nullable = true)
