@@ -15,8 +15,8 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name= "organizations")
-@SQLDelete(sql = "UPDATE organizations SET softDelete = true WHERE id=?")
-@Where(clause = "softDelete=false")
+@SQLDelete(sql = "UPDATE organizations SET deleted = true WHERE id=?")
+@Where(clause = "deleted=false")
 public class OrganizationModel {
 
     @Id
@@ -39,7 +39,7 @@ public class OrganizationModel {
     @Temporal(TemporalType.TIMESTAMP)
     private Date timestamps;
     @Column(nullable = false)
-    private boolean softDelete = false;
+    private boolean deleted = false;
 
     
     
