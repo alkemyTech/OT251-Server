@@ -42,6 +42,5 @@ public class Activity {
 	@UpdateTimestamp
 	private Timestamp updateAt;
 
-	@Column(name = "soft_delete")
 	private boolean deleted = false;
 }
