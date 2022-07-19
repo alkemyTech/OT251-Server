@@ -1,5 +1,7 @@
 package com.alkemy.ong.dto.request.user;
 
+import java.util.UUID;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -10,7 +12,7 @@ import lombok.Data;
 @Data
 public class UserRegisterRequest {
 
-	private String id;
+	private UUID id;
 
 	@NotBlank(message = "The first Name field cannot be empty.")
 	@Size(min = 2, max = 30, message = "The length of the name must be greater than 2 and less than 30 characters.")
