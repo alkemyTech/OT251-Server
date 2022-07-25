@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.alkemy.ong.dto.request.user.UserRegisterRequest;
 import com.alkemy.ong.dto.response.user.UserResponse;
 import com.alkemy.ong.exception.EmailAlreadyExistsException;
+import com.alkemy.ong.exception.EmailNotFoundException;
 import com.alkemy.ong.mappers.UserMapper;
 import com.alkemy.ong.models.User;
 import com.alkemy.ong.repositories.UserRepository;
@@ -41,15 +42,20 @@ public class UserServiceImp implements IUserService {
 
 	}
 
+	@Override
+	@Transactional(readOnly = true)
+	public User findByEmail(String email){
+		return userRepository.findByEmail(email);
+	}
+
 	//rama 25 Erika Brito
 	//@Override
 	@Transactional(readOnly = true)
-	public UserDetails loadUserByEmail(String email) throws Exception {
+	public UserDetails loadUserByEmail(String email) throws EmailNotFoundException {
 		User usuario = userRepository.findByEmail(email);
 
-		if(usuario == null){
-			throw new Exception("No se encontró el email:" + email);		
-		}
+		if(usuario == null)
+			throw new EmailNotFoundException("No se encontró el email:" + email);		
 
 		boolean estado;
 		if (usuario.getDeleted()) //el parametro es enabled, traduzco desde deleted
