@@ -20,7 +20,7 @@ public class UserMapper {
 		userResponse.setLastName(user.getLastName());
 		userResponse.setEmail(user.getEmail());
 		userResponse.setPhoto(user.getPhoto());
-		// userResponse.setRole(user.getRole().get(0).getName());
+		userResponse.setRoles(user.getRoles());
 		return userResponse;
 	}
 
