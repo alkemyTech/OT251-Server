@@ -18,6 +18,9 @@ public class UserServiceImp implements IUserService {
 	private UserRepository userRepository;
 
 	@Autowired
+	private IMailSenderService emailService;
+
+	@Autowired
 	private UserMapper userMapper;
 
 	@Override
@@ -29,6 +32,7 @@ public class UserServiceImp implements IUserService {
 		User user = userMapper.mapModel(userRegister);
 //		RolEntity roles = rolRepo.findByName("ROLE").get();
 //		user.setRoles(Collections.singleton(roles));
+		emailService.sendMailRegister(userRegister.getEmail());
 		return userMapper.mapResponse(userRepository.save(user));
 
 	}
