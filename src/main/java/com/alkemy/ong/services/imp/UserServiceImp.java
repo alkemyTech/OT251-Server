@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+//import com.alkemy.ong.config.security.JwtTokenProvider;
 import com.alkemy.ong.dto.request.user.UserRegisterRequest;
 import com.alkemy.ong.dto.response.user.UserResponse;
 import com.alkemy.ong.exception.EmailAlreadyExistsException;
@@ -29,6 +30,9 @@ public class UserServiceImp implements IUserService {
 	@Autowired
 	private UserMapper userMapper;
 
+//	@Autowired
+//	private JwtTokenProvider JwtTokenProvider;
+
 	@Override
 	public UserResponse register(UserRegisterRequest userRegister) throws EmailAlreadyExistsException {
 		if (userRepository.existsByEmail(userRegister.getEmail())) {
@@ -44,30 +48,38 @@ public class UserServiceImp implements IUserService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public User findByEmail(String email){
+	public User findByEmail(String email) {
 		return userRepository.findByEmail(email);
 	}
 
-	//rama 25 Erika Brito
-	//@Override
+	// rama 25 Erika Brito
+	// @Override
 	@Transactional(readOnly = true)
 	public UserDetails loadUserByEmail(String email) throws EmailNotFoundException {
 		User usuario = userRepository.findByEmail(email);
 
-		if(usuario == null)
-			throw new EmailNotFoundException("No se encontró el email:" + email);		
+		if (usuario == null)
+			throw new EmailNotFoundException("No se encontró el email:" + email);
 
 		boolean estado;
-		if (usuario.getDeleted()) //el parametro es enabled, traduzco desde deleted
+		if (usuario.getDeleted()) // el parametro es enabled, traduzco desde deleted
 			estado = false;
-		else estado = true;
+		else
+			estado = true;
 
-		List<GrantedAuthority> authorities = usuario.getRoles()
-			.stream()
-			.map(Role -> new SimpleGrantedAuthority(Role.getName()))
-			.collect(Collectors.toList());
+		List<GrantedAuthority> authorities = usuario.getRoles().stream()
+				.map(Role -> new SimpleGrantedAuthority(Role.getName())).collect(Collectors.toList());
 
-		return new org.springframework.security.core.userdetails.User(usuario.getEmail(), usuario.getPassword(), estado, true, true, true, authorities);
+		return new org.springframework.security.core.userdetails.User(usuario.getEmail(), usuario.getPassword(), estado,
+				true, true, true, authorities);
 	}
+
+	/*
+	 * Codigo para agregar cuando este el metodo de reistrar usuario
+	 * public UserResponse loginUser( UserLoginRequest userLogin){
+	 * 
+	 * String token = jwtTokenPRovider.generateToken(authetication); Return token;
+	 * }
+	 */
 
 }
