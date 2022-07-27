@@ -1,12 +1,9 @@
 package com.alkemy.ong.services;
 
-import com.sendgrid.helpers.mail.Mail;
+import java.io.IOException;
 
 public interface IMailSenderService {
     
-    public void sendMailRegister(String email);
-    
-    public void sendMail(Mail mail);
-    
-    
+    public void sendMailRegister(String email) throws IOException;
+
 }

@@ -18,7 +18,7 @@ public class MailSenderServiceImp implements IMailSenderService{
     private String key = "";  //set a string with your sendgrid key value 
     
     @Override
-    public void sendMailRegister(String email) {
+    public void sendMailRegister(String email) throws IOException{
         Email from = new Email(email_sender);
         Email toEmail = new Email(email);
         
@@ -28,8 +28,7 @@ public class MailSenderServiceImp implements IMailSenderService{
         sendMail(mail);
     }
     
-    @Override
-    public void sendMail(Mail mail) {
+    public void sendMail(Mail mail) throws IOException{
         SendGrid sendGrid = new SendGrid(key);
         Request request = new Request();
         
