@@ -12,7 +12,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -21,18 +20,16 @@ import org.hibernate.annotations.Where;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
 @Entity
+@Data
+@Table(name = "news")
 @SQLDelete(sql = "UPDATE news SET deleted=true WHERE id = ?")
 @Where(clause = "deleted = false")
-@Table(name = "news")
 public class News {
-    
+
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "UUID2")
     @Type(type = "uuid-char")
+    @GeneratedValue
     private UUID id;
 
     @Column(nullable = false)
@@ -46,12 +43,14 @@ public class News {
 
     @ManyToOne
     @JoinColumn(name = "category_id")
-    // private Category category;
+    private Category category;
 
     @CreationTimestamp
+    @Column(nullable = false, updatable = false)
     private Timestamp createdAt;
 
     @UpdateTimestamp
+    @Column(nullable = false)
     private Timestamp updatedAt;
 
     private Boolean deleted;
