@@ -1,11 +1,14 @@
 package com.alkemy.ong.services.imp;
 
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alkemy.ong.dto.request.user.UserRegisterRequest;
 import com.alkemy.ong.dto.response.user.UserResponse;
 import com.alkemy.ong.exception.EmailAlreadyExistsException;
+import com.alkemy.ong.exception.ResourceNotFoundException;
 import com.alkemy.ong.mappers.UserMapper;
 import com.alkemy.ong.models.User;
 import com.alkemy.ong.repositories.UserRepository;
@@ -31,6 +34,13 @@ public class UserServiceImp implements IUserService {
 //		user.setRoles(Collections.singleton(roles));
 		return userMapper.mapResponse(userRepository.save(user));
 
+	}
+
+	@Override
+	public void delete(UUID id) {
+		User user = userRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
+		userRepository.delete(user);
 	}
 
 }

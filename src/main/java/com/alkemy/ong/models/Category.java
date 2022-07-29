@@ -18,6 +18,7 @@ public class Category {
 
     @Id
     @GeneratedValue
+    @Type(type = "uuid-char")
     private UUID id;
 
     @Column(nullable = false)
