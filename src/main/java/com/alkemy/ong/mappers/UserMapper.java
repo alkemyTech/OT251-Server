@@ -1,4 +1,4 @@
-package com.alkemy.ong.config.mapper;
+package com.alkemy.ong.mappers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,11 +16,12 @@ public class UserMapper {
 
 	public UserResponse mapResponse(User user) {
 		UserResponse userResponse = new UserResponse();
+		userResponse.setId(user.getId());
 		userResponse.setFirstName(user.getFirstName());
 		userResponse.setLastName(user.getLastName());
 		userResponse.setEmail(user.getEmail());
 		userResponse.setPhoto(user.getPhoto());
-		// userResponse.setRole(user.getRole().get(0).getName());
+		userResponse.setRoles(user.getRoles());
 		return userResponse;
 	}
 
