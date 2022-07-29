@@ -13,5 +13,4 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
 	public Boolean existsByEmail(String email);
 
-	
 }
