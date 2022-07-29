@@ -26,7 +26,11 @@ public class UserServiceImp implements IUserService {
 	private UserRepository userRepository;
 
 	@Autowired
+	private IMailSenderService emailService;
+
+	@Autowired
 	private RoleRepository roleRepo;
+
 
 	@Autowired
 	private UserMapper userMapper;
@@ -43,6 +47,7 @@ public class UserServiceImp implements IUserService {
 		Role role = roleRepo.findByName("USER");
 		roles.add(role);
 		user.setRoles(roles);
+		emailService.sendMailRegister(userRegister.getEmail());
 
 		return userMapper.mapResponse(userRepository.save(user));
 
