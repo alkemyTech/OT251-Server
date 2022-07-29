@@ -1,8 +1,11 @@
 package com.alkemy.ong.dto.response.user;
 
+import com.alkemy.ong.models.Role;
 import java.util.UUID;
 
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 public class UserResponse {
@@ -11,5 +14,5 @@ public class UserResponse {
 	private String lastName;
 	private String email;
 	private String photo;
-	private String role;
+	private List<Role> roles;
 }
