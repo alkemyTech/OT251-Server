@@ -1,5 +1,6 @@
 package com.alkemy.ong.mappers;
 
+import com.alkemy.ong.dto.request.user.UserUpdateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -33,5 +34,16 @@ public class UserMapper {
 		userRegisterRequest.setPassword(passwordEncoder.encode(userRequest.getPassword()));
 		return userRegisterRequest;
 	}
+
+	public User userUpdateRequestToUser(UserUpdateRequest userUpdateRequest) {
+		User user = new User();
+		user.setFirstName(userUpdateRequest.getFirstName());
+		user.setLastName(userUpdateRequest.getLastName());
+		user.setEmail(userUpdateRequest.getEmail());
+		user.setPassword(passwordEncoder.encode(userUpdateRequest.getPassword()));
+		user.setRoles(userUpdateRequest.getRoles());
+		return user;
+	}
+
 
 }

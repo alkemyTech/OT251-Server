@@ -2,6 +2,7 @@ package com.alkemy.ong.services.imp;
 
 import java.util.UUID;
 
+import com.alkemy.ong.dto.request.user.UserUpdateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +42,14 @@ public class UserServiceImp implements IUserService {
 		User user = userRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
 		userRepository.delete(user);
+	}
+
+	@Override
+	public UserResponse update(UUID id, UserUpdateRequest userDTO) {
+		userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
+		User user = userMapper.userUpdateRequestToUser(userDTO);
+		user.setId(id);
+		return userMapper.mapResponse(userRepository.save(user));
 	}
 
 }
