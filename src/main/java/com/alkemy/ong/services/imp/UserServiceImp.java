@@ -1,5 +1,7 @@
 package com.alkemy.ong.services.imp;
 
+import com.alkemy.ong.models.Role;
+import com.alkemy.ong.repositories.RoleRepository;
 import java.util.UUID;
 
 import com.alkemy.ong.dto.request.user.UserUpdateRequest;
@@ -15,11 +17,21 @@ import com.alkemy.ong.models.User;
 import com.alkemy.ong.repositories.UserRepository;
 import com.alkemy.ong.services.IUserService;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class UserServiceImp implements IUserService {
 
 	@Autowired
 	private UserRepository userRepository;
+
+	@Autowired
+	private IMailSenderService emailService;
+
+	@Autowired
+	private RoleRepository roleRepo;
+
 
 	@Autowired
 	private UserMapper userMapper;
@@ -31,8 +43,13 @@ public class UserServiceImp implements IUserService {
 					"There is an account with that email adress:" + userRegister.getEmail());
 		}
 		User user = userMapper.mapModel(userRegister);
-//		RolEntity roles = rolRepo.findByName("ROLE").get();
-//		user.setRoles(Collections.singleton(roles));
+
+		List<Role> roles = new ArrayList();
+		Role role = roleRepo.findByName("USER");
+		roles.add(role);
+		user.setRoles(roles);
+		emailService.sendMailRegister(userRegister.getEmail());
+
 		return userMapper.mapResponse(userRepository.save(user));
 
 	}
