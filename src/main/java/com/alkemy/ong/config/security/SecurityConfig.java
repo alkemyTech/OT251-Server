@@ -12,14 +12,15 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import com.alkemy.ong.config.security.services.CustomUserDetailsService;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
-	//rama 25 Brito Erika
 	@Autowired
-	private UserDetailsService usuarioService;
-
+	private CustomUserDetailsService userDetailsServices;
+	
 	@Bean
 	public UserDetailsService userDetailsService() {
 		return super.userDetailsService();
@@ -30,24 +31,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	    return new BCryptPasswordEncoder();
 	}
 
-	//rama 25 Brito Erika
-	@Autowired
-	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception{
-		auth.userDetailsService(this.usuarioService).passwordEncoder(encoder());
-	}
-
-	@Bean("authenticationManager")
-	@Override
-	protected AuthenticationManager authenticationManager() throws Exception{
-		return super.authenticationManager();
-	}
-
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
 		.and()
 		.csrf().disable()
 		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+	}
+	
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth.userDetailsService(userDetailsServices).passwordEncoder(encoder());
+	}
+	
+	
+	@Override
+	@Bean
+	public AuthenticationManager authenticationManagerBean() throws Exception {
+		return super.authenticationManagerBean();
 	}
 }
