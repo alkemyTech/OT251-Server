@@ -11,6 +11,8 @@ public interface IUserService {
 	public UserResponse register(UserRegisterRequest UserRegisterRequest);
 
 	void delete(UUID id);
+
+	public UserResponse getUserAuth(String token);
 	
 	
 }
