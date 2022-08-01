@@ -1,4 +1,4 @@
-package com.alkemy.ong.repository;
+package com.alkemy.ong.repositories;
 
 import java.util.UUID;
 

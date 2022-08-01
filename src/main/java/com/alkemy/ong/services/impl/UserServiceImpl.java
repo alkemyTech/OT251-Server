@@ -1,5 +1,9 @@
-package com.alkemy.ong.services.imp;
+package com.alkemy.ong.services.impl;
 
+import com.alkemy.ong.exception.ResourceNotFoundException;
+import com.alkemy.ong.models.Role;
+import com.alkemy.ong.repositories.RoleRepository;
+import com.alkemy.ong.services.IMailSenderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,6 +20,10 @@ import com.alkemy.ong.models.User;
 import com.alkemy.ong.repositories.UserRepository;
 import com.alkemy.ong.services.IUserService;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 @Service
 public class UserServiceImpl implements IUserService {
 
@@ -23,11 +31,17 @@ public class UserServiceImpl implements IUserService {
 	private UserRepository userRepository;
 
 	@Autowired
-	private UserMapper userMapper;
+	private IMailSenderService emailService;
+
+	@Autowired
+	private RoleRepository roleRepo;
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
-	
+
+	@Autowired
+	private UserMapper userMapper;
+
 	@Override
 	public UserResponse register(UserRegisterRequest userRegister) throws EmailAlreadyExistsException {
 		if (userRepository.existsByEmail(userRegister.getEmail())) {
@@ -35,8 +49,13 @@ public class UserServiceImpl implements IUserService {
 					"There is an account with that email adress:" + userRegister.getEmail());
 		}
 		User user = userMapper.mapModel(userRegister);
-//		RolEntity roles = rolRepo.findByName("ROLE").get();
-//		user.setRoles(Collections.singleton(roles));
+
+		List<Role> roles = new ArrayList();
+		Role role = roleRepo.findByName("USER");
+		roles.add(role);
+		user.setRoles(roles);
+		emailService.sendMailRegister(userRegister.getEmail());
+
 		return userMapper.mapResponse(userRepository.save(user));
 
 	}
@@ -49,5 +68,12 @@ public class UserServiceImpl implements IUserService {
 		User user = userRepository.findByEmail(userLogin.getEmail());
 		return userMapper.mapResponse(user);
 	}
+	@Override
+	public void delete(UUID id) {
+		User user = userRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
+		userRepository.delete(user);
+	}
+
 
 }
