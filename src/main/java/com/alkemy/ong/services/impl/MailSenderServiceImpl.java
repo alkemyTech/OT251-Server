@@ -1,4 +1,4 @@
-package com.alkemy.ong.services.imp;
+package com.alkemy.ong.services.impl;
 
 import com.alkemy.ong.services.IMailSenderService;
 import com.sendgrid.Method;
@@ -12,7 +12,7 @@ import java.io.IOException;
 import org.springframework.stereotype.Service;
 
 @Service
-public class MailSenderServiceImp implements IMailSenderService{
+public class MailSenderServiceImpl implements IMailSenderService{
     
     private String email_sender = "";
     private String key = "";  //set a string with your sendgrid key value 

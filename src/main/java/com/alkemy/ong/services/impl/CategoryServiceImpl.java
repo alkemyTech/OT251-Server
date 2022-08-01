@@ -1,4 +1,4 @@
-package com.alkemy.ong.services.imp;
+package com.alkemy.ong.services.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,7 @@ import com.alkemy.ong.repositories.CategoryRepository;
 import com.alkemy.ong.services.ICategoryService;
 
 @Service
-public class CategoryServiceImp implements ICategoryService{
+public class CategoryServiceImpl implements ICategoryService{
 
     @Autowired   
     private CategoryRepository catRep;   
