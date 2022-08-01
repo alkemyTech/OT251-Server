@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alkemy.ong.dto.request.user.UserLoginRequest;
 import com.alkemy.ong.dto.request.user.UserRegisterRequest;
 import com.alkemy.ong.dto.response.user.UserResponse;
 import com.alkemy.ong.exception.EmailAlreadyExistsException;
@@ -17,7 +18,7 @@ import com.alkemy.ong.services.IUserService;
 
 @RestController
 @RequestMapping("/auth")
-public class Authentication {
+public class AuthContoller {
 
 	@Autowired
 	private IUserService userService;
@@ -28,4 +29,9 @@ public class Authentication {
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(userService.register(userRegister));
 	}
 
+	@PostMapping("/login")
+	public ResponseEntity<UserResponse> login(@RequestBody UserLoginRequest userLogin) {
+		return ResponseEntity.ok(userService.loginUser(userLogin));
+	}
+	
 }
