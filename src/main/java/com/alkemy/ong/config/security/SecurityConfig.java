@@ -17,28 +17,24 @@ import com.alkemy.ong.config.security.services.CustomUserDetailsService;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter{
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private CustomUserDetailsService userDetailsServices;
 
 	@Bean
 	PasswordEncoder encoder() {
-	    return new BCryptPasswordEncoder();
+		return new BCryptPasswordEncoder();
 	}
 
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
-		httpSecurity
-				.csrf().disable()
-				.authorizeRequests()
-				.antMatchers(HttpMethod.POST,"/auth/register").permitAll()
-				.antMatchers(HttpMethod.POST,"/auth/login").permitAll()
-				.antMatchers(HttpMethod.GET,"/organization/public").permitAll()
-				.anyRequest().authenticated().and()
-				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		httpSecurity.csrf().disable().exceptionHandling().and().sessionManagement().and().authorizeRequests()
+				.antMatchers(HttpMethod.POST, "/auth/register").permitAll().antMatchers(HttpMethod.POST, "/auth/login")
+				.permitAll().antMatchers(HttpMethod.GET, "/organization/public").permitAll().anyRequest()
+				.authenticated().and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 	}
-	
+
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(userDetailsServices).passwordEncoder(encoder());
