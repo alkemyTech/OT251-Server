@@ -19,12 +19,12 @@ import java.util.List;
 public class CategoryController {
 
     @Autowired
-    ICategoryService categoryService;
+    private ICategoryService categoryService;
 
     @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value="", method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<Object> getListCategory() {
-        List<CategoryDTO> lista = categoryService.listaCategorias();
+        List<CategoryDTO> lista = categoryService.categoryList();
 
         List<JSONObject> entities = new ArrayList<JSONObject>();
         for (CategoryDTO n : lista) {

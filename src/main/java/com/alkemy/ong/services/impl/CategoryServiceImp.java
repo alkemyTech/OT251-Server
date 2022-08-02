@@ -1,4 +1,4 @@
-package com.alkemy.ong.services.imp;
+package com.alkemy.ong.services.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,7 @@ public class CategoryServiceImp implements ICategoryService{
     private List<CategoryDTO> listaDto = new ArrayList<CategoryDTO>();
 
     @Override
-    public List<CategoryDTO> listaCategorias() {        
+    public List<CategoryDTO> categoryList() {        
         List<Category> lista = catRep.findAll();
 
         for (int i=0;i<lista.size();i++) {
