@@ -11,7 +11,7 @@ import java.util.UUID;
 public class CategoryServiceImpl implements ICategoryService {
 
     @Autowired
-    CategoryRepository categoryRepository;
+    private CategoryRepository categoryRepository;
 
     public Category findById(UUID id){
         Category category = categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Category", "id", id));
