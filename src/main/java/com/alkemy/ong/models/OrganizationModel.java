@@ -27,8 +27,7 @@ import lombok.Data;
 public class OrganizationModel {
 
     @Id
-    @GeneratedValue //(generator = "UUID")
-    //@GenericGenerator(name = "UUID", strategy = "UUID2")
+    @GeneratedValue
     @Type(type = "uuid-char")
     private UUID id;
     @Column(nullable = false)
@@ -53,17 +52,3 @@ public class OrganizationModel {
     
     
 }
-/*COMO desarrollador 
-QUIERO agregar la entidad Organization
-PARA representar en la implementación la estructura de datos
-
-Criterios de aceptación: 
-Nombre de tabla: organizations. Los campos son:
-name: VARCHAR NOT NULL
-image: VARCHAR NOT NULL
-address: VARCHAR NULLABLE
-phone: INTEGER NULLABLE
-email: VARCHAR NOT NULL
-welcomeText: TEXT NOT NULL
-aboutUsText: TEXT NULLABLE
-timestamps y softDelete */

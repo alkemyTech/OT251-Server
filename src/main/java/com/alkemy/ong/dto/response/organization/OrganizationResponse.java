@@ -1,11 +1,11 @@
-package com.alkemy.ong.dto.response.contact;
+package com.alkemy.ong.dto.response.organization;
 
 import lombok.Data;
 
 import java.util.UUID;
 
 @Data
-public class OrganizationDTO {
+public class OrganizationResponse {
 
     private UUID id;
     private String name;
