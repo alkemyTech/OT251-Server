@@ -4,6 +4,7 @@ import java.util.UUID;
 
 public interface IUserService {
 
+
 	void delete(UUID id);
 	
 }
