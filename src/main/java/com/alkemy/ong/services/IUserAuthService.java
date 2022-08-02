@@ -1,8 +1,11 @@
 package com.alkemy.ong.services;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.alkemy.ong.dto.request.jwt.JWTAuthResonseDTO;
 import com.alkemy.ong.dto.request.user.UserLoginRequest;
 import com.alkemy.ong.dto.request.user.UserRegisterRequest;
+import com.alkemy.ong.dto.response.user.UserAuthenticatedResponse;
 import com.alkemy.ong.dto.response.user.UserResponse;
 
 public interface IUserAuthService {
@@ -11,6 +14,6 @@ public interface IUserAuthService {
 	
 	JWTAuthResonseDTO loginUser(UserLoginRequest userLogin);
 	
-	UserResponse getUserAuth(String token);
+	UserAuthenticatedResponse getUserAuth(HttpServletRequest httpServletRequest);
 
 }

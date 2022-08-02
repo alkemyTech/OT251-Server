@@ -3,7 +3,10 @@ package com.alkemy.ong.services.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -14,8 +17,10 @@ import com.alkemy.ong.config.security.auth.JwtTokenProvider;
 import com.alkemy.ong.dto.request.jwt.JWTAuthResonseDTO;
 import com.alkemy.ong.dto.request.user.UserLoginRequest;
 import com.alkemy.ong.dto.request.user.UserRegisterRequest;
+import com.alkemy.ong.dto.response.user.UserAuthenticatedResponse;
 import com.alkemy.ong.dto.response.user.UserResponse;
 import com.alkemy.ong.exception.EmailAlreadyExistsException;
+import com.alkemy.ong.exception.JwtAppException;
 import com.alkemy.ong.mappers.UserMapper;
 import com.alkemy.ong.models.Role;
 import com.alkemy.ong.models.User;
@@ -73,11 +78,10 @@ public class UserAuthServiceImpl implements IUserAuthService {
 	}
 
 	@Override
-	public UserResponse getUserAuth(String token) {
-		token = token.replace("Bearer ", "");
-		String email = jwtTokenProvider.GetUsernameJWT(token);
-		User userEntity = userRepository.findByEmail(email);
-		return userMapper.mapResponse(userEntity);
+	public UserAuthenticatedResponse getUserAuth(HttpServletRequest httpServletRequest) {
+		String token = httpServletRequest.getHeader("Authorization").substring(7);
+		User user = userRepository.findByEmail(jwtTokenProvider.GetUsernameJWT(token));
+		return userMapper.mapResponseAuthenticate(user);
 	}
 
 }

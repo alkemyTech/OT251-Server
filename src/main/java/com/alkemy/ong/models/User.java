@@ -1,14 +1,26 @@
 package com.alkemy.ong.models;
 
-import lombok.*;
-import org.hibernate.annotations.*;
-
-import javax.persistence.*;
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.Where;
+
+import lombok.Data;
 
 @Entity
 @Data
@@ -36,7 +48,7 @@ public class User {
 
     private String photo;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "roleId")
     private List<Role> roles;
 
