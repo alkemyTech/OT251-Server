@@ -18,6 +18,7 @@ public class ResourceNotFoundException extends RuntimeException {
 	private String resourceName;
 	private String fieldName;
 	private UUID fieldValue;
+	private String fieldValueString;
 
 	public ResourceNotFoundException(String resourceName, String fieldName, UUID fieldValue) {
 		super(String.format("%s not found : %s : '%s'", resourceName, fieldName, fieldValue));
@@ -25,4 +26,12 @@ public class ResourceNotFoundException extends RuntimeException {
 		this.fieldName = fieldName;
 		this.fieldValue = fieldValue;
 	}
+	
+	public ResourceNotFoundException(String resourceName, String fieldName, String fieldValueString) {
+		super(String.format("%s not found : %s : '%s'", resourceName, fieldName, fieldValueString));
+		this.resourceName = resourceName;
+		this.fieldName = fieldName;
+		this.fieldValueString = fieldValueString;
+	}
+	
 }
