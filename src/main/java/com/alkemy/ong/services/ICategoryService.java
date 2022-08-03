@@ -7,7 +7,7 @@ import com.alkemy.ong.dto.response.category.CategoryDTO;
 import com.alkemy.ong.models.Category;
 
 public interface ICategoryService {
-    public List<CategoryDTO> listaCategorias();
+    public List<CategoryDTO> categoryList();
 
     public Category findById(UUID id);
 
