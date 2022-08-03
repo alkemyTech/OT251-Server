@@ -3,8 +3,9 @@ package com.alkemy.ong.controllers;
 
 import java.util.UUID;
 
-import com.alkemy.ong.dto.response.user.UserResponse;
 import com.alkemy.ong.services.IUserAuthService;
+import com.alkemy.ong.dto.request.user.UserUpdateRequest;
+import com.alkemy.ong.dto.response.user.UserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,9 +34,13 @@ public class UserController {
 	}
 
 	@PreAuthorize("hasRole('ADMIN')")
-	@GetMapping("a/users")
+	@GetMapping
 	public Page<UserResponse> getAllUsers(Pageable pageable){
 		return userServiceAuth.getAllUsers(pageable);
 	}
 
+	@PatchMapping("/{id}")
+	public ResponseEntity<UserResponse> editUser(@PathVariable UUID id, @RequestBody UserUpdateRequest user){
+		return ResponseEntity.status(HttpStatus.OK).body(userService.update(id,user));
+	}
 }

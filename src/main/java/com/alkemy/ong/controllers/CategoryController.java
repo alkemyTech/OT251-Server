@@ -1,6 +1,7 @@
 package com.alkemy.ong.controllers;
 
 import com.alkemy.ong.dto.response.category.CategoryDTO;
+import com.alkemy.ong.models.Category;
 import com.alkemy.ong.services.ICategoryService;
 
 import org.json.JSONObject;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/categories")
@@ -34,6 +36,12 @@ public class CategoryController {
             entities.add(catDTO);
         }
         return new ResponseEntity<Object>(entities, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/{id}")
+    public ResponseEntity<Category> getCategory(@PathVariable UUID id){
+        return ResponseEntity.status(HttpStatus.OK).body(categoryService.findById(id));
     }
 
 }

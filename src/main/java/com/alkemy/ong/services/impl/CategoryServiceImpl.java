@@ -2,7 +2,9 @@ package com.alkemy.ong.services.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
+import com.alkemy.ong.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,15 +18,14 @@ import com.alkemy.ong.services.ICategoryService;
 public class CategoryServiceImpl implements ICategoryService{
 
     @Autowired   
-    private CategoryRepository catRep;   
+    private CategoryRepository categoryRepo;
     private CategoryDTO dto = new CategoryDTO();        
     private CategoryMapper map = new CategoryMapper();
     private List<CategoryDTO> listaDto = new ArrayList<CategoryDTO>();
 
     @Override
     public List<CategoryDTO> listaCategorias() {        
-        List<Category> lista = catRep.findAll();
-
+        List<Category> lista = categoryRepo.findAll();
         for (int i=0;i<lista.size();i++) {
             dto = map.crearDTO(lista.get(i));
             listaDto.add(dto);
@@ -32,5 +33,10 @@ public class CategoryServiceImpl implements ICategoryService{
         return listaDto;
     }
 
-    
+    @Override
+    public Category findById(UUID id){
+        Category category = categoryRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Category", "id", id));
+        return category;
+    }
+
 }
