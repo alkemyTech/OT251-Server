@@ -24,7 +24,7 @@ public class CategoryServiceImpl implements ICategoryService{
     private List<CategoryDTO> listaDto = new ArrayList<CategoryDTO>();
 
     @Override
-    public List<CategoryDTO> listaCategorias() {        
+    public List<CategoryDTO> categoryList() {        
         List<Category> lista = categoryRepo.findAll();
         for (int i=0;i<lista.size();i++) {
             dto = map.crearDTO(lista.get(i));
