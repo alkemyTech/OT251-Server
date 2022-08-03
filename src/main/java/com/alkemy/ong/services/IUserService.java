@@ -7,6 +7,7 @@ import com.alkemy.ong.dto.response.user.UserResponse;
 
 public interface IUserService {
 
+
 	void delete(UUID id);
 
 	public UserResponse update(UUID id, UserUpdateRequest user);

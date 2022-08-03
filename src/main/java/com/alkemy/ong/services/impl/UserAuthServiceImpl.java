@@ -6,7 +6,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,7 +21,6 @@ import com.alkemy.ong.dto.request.user.UserRegisterRequest;
 import com.alkemy.ong.dto.response.user.UserAuthenticatedResponse;
 import com.alkemy.ong.dto.response.user.UserResponse;
 import com.alkemy.ong.exception.EmailAlreadyExistsException;
-import com.alkemy.ong.exception.JwtAppException;
 import com.alkemy.ong.mappers.UserMapper;
 import com.alkemy.ong.models.Role;
 import com.alkemy.ong.models.User;
@@ -66,6 +66,13 @@ public class UserAuthServiceImpl implements IUserAuthService {
 
 		return userMapper.mapResponse(userRepository.save(user));
 
+	}
+
+	@Override
+	public Page<UserResponse> getAllUsers(Pageable pageable){
+		Page<User> users = userRepository.findAll(pageable);
+		Page<UserResponse> dto = users.map(user -> userMapper.mapResponse(user));
+		return dto;
 	}
 
 	@Override
