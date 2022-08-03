@@ -29,10 +29,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
-		httpSecurity.csrf().disable().exceptionHandling().and().sessionManagement().and().authorizeRequests()
-				.antMatchers(HttpMethod.POST, "/auth/register").permitAll().antMatchers(HttpMethod.POST, "/auth/login")
-				.permitAll().antMatchers(HttpMethod.GET, "/organization/public").permitAll().anyRequest()
-				.authenticated().and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		httpSecurity
+				.csrf().disable()
+				.exceptionHandling().and()
+				.sessionManagement().and()
+				.authorizeRequests()
+				.antMatchers(HttpMethod.POST, "/auth/register").permitAll()
+				.antMatchers(HttpMethod.POST, "/auth/login").permitAll()
+				.antMatchers(HttpMethod.GET, "/organization/public").permitAll()
+				.antMatchers(HttpMethod.GET,"/categories/{id}").hasRole("ADMIN")
+				.anyRequest().authenticated().and()
+				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 	}
 
 	@Override
