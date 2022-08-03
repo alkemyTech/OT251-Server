@@ -1,23 +1,36 @@
 package com.alkemy.ong.config.amazons3.services.impl;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
+import java.util.UUID;
 
 import javax.annotation.PostConstruct;
+import javax.validation.constraints.AssertTrue;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.util.StringUtils;
 
 import com.alkemy.ong.config.amazons3.AWSClientConfig;
 import com.alkemy.ong.config.amazons3.services.IAWSClientService;
+import com.alkemy.ong.models.vm.Asset;
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.services.s3.model.*;
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
+import com.amazonaws.util.IOUtils;
+
+//import antlr.StringUtils;
 
 @Service
 public class AWSClientServiceImpl implements IAWSClientService{
@@ -30,12 +43,55 @@ public class AWSClientServiceImpl implements IAWSClientService{
 
 	@Autowired
 	public AWSClientConfig awsS3ClientConfig;
-
+	
 	private AmazonS3 s3client;
+
+	@Autowired
+	private AmazonS3Client clientAS3;
 
 	@PostConstruct
 	private void initializeAmazon() {
 		s3client = awsS3ClientConfig.initializeAmazon();
+	}
+	
+	public String putObject(MultipartFile multipartFile){
+		String extension = StringUtils.getFilenameExtension(multipartFile.getOriginalFilename());
+		String key = String.format("%s.%s", UUID.randomUUID(), extension);
+
+		ObjectMetadata objectMetadata = new ObjectMetadata();
+		objectMetadata.setContentType(multipartFile.getContentType());
+
+		try{
+			PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, key, multipartFile.getInputStream(), objectMetadata)
+				.withCannedAcl(CannedAccessControlList.PublicRead); 
+			clientAS3.putObject(putObjectRequest);
+			return key;
+		}catch(IOException ex){
+			throw new RuntimeException(ex);
+		}
+	}
+
+	public Asset getObject(String key){
+		
+		S3Object s3Object = clientAS3.getObject(bucketName,key);
+		ObjectMetadata metadata = s3Object.getObjectMetadata();
+
+		try{
+			S3ObjectInputStream inputStream = s3Object.getObjectContent();
+			byte[] bytes = IOUtils.toByteArray(inputStream);
+
+			return new Asset(bytes, metadata.getContentType());
+		}catch(IOException ex){
+			throw new RuntimeException(ex);
+		}
+	}
+
+	public void deleteObject(String key){
+		clientAS3.deleteObject(bucketName, key);
+	}
+
+	public String getObjectURL(String key){
+		return String.format("https://%s.amazonaws.com/%s", bucketName, key);
 	}
 
 	/**
@@ -93,11 +149,5 @@ public class AWSClientServiceImpl implements IAWSClientService{
 		s3client.deleteObject(new DeleteObjectRequest(bucketName, fileName));
 		return "Successfully deleted";
 	}
-
-//	@Override
-//	public String uploadFile(MultipartFile multipartFile) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
 
 }
