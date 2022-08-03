@@ -1,0 +1,6 @@
+amazonProperties:
+  endpointUrl: https://s3.us-east-2.amazonaws.com
+  accessKey: AKIAS2JWQJCDDKORQMU5
+  secretKey: 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
+  bucketName: cohorte-julio-8972766c
+  region: us-east-1

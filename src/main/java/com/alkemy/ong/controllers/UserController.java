@@ -18,7 +18,7 @@ import com.alkemy.ong.services.IUserService;
 public class UserController {
 
 	@Autowired
-	IUserService userService;
+	private IUserService userService;
 
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<Void> deleteUser(@PathVariable UUID id){
