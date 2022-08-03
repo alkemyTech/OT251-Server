@@ -1,10 +1,13 @@
 package com.alkemy.ong.services.impl;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -15,6 +18,7 @@ import com.alkemy.ong.config.security.auth.JwtTokenProvider;
 import com.alkemy.ong.dto.request.jwt.JWTAuthResonseDTO;
 import com.alkemy.ong.dto.request.user.UserLoginRequest;
 import com.alkemy.ong.dto.request.user.UserRegisterRequest;
+import com.alkemy.ong.dto.response.user.UserAuthenticatedResponse;
 import com.alkemy.ong.dto.response.user.UserResponse;
 import com.alkemy.ong.exception.EmailAlreadyExistsException;
 import com.alkemy.ong.mappers.UserMapper;
@@ -30,21 +34,21 @@ public class UserAuthServiceImpl implements IUserAuthService {
 
 	@Autowired
 	private UserMapper userMapper;
-	
+
 	@Autowired
 	private UserRepository userRepository;
 
 	@Autowired
 	private RoleRepository roleRepo;
-	
+
 	@Autowired
 	private IMailSenderService emailService;
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
-	
+
 	@Autowired
-	private JwtTokenProvider  jwtTokenProvider;
+	private JwtTokenProvider jwtTokenProvider;
 
 	@Override
 	public UserResponse register(UserRegisterRequest userRegister) throws EmailAlreadyExistsException {
@@ -65,6 +69,13 @@ public class UserAuthServiceImpl implements IUserAuthService {
 	}
 
 	@Override
+	public Page<UserResponse> getAllUsers(Pageable pageable){
+		Page<User> users = userRepository.findAll(pageable);
+		Page<UserResponse> dto = users.map(user -> userMapper.mapResponse(user));
+		return dto;
+	}
+
+	@Override
 	public JWTAuthResonseDTO loginUser(UserLoginRequest userLogin) {
 		Authentication auth = authenticationManager
 				.authenticate(new UsernamePasswordAuthenticationToken(userLogin.getEmail(), userLogin.getPassword()));
@@ -72,6 +83,12 @@ public class UserAuthServiceImpl implements IUserAuthService {
 		String token = jwtTokenProvider.generateToken(auth);
 		return new JWTAuthResonseDTO(token);
 	}
-	
+
+	@Override
+	public UserAuthenticatedResponse getUserAuth(HttpServletRequest httpServletRequest) {
+		String token = httpServletRequest.getHeader("Authorization").substring(7);
+		User user = userRepository.findByEmail(jwtTokenProvider.GetUsernameJWT(token));
+		return userMapper.mapResponseAuthenticate(user);
+	}
 
 }
