@@ -4,6 +4,6 @@ import java.io.IOException;
 
 public interface IMailSenderService {
     
-    public void sendMailRegister(String email) throws IOException;
+    public void sendMailRegister(String email);
 
 }

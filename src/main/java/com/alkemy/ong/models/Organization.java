@@ -24,7 +24,7 @@ import lombok.Data;
 @Table(name= "organizations")
 @SQLDelete(sql = "UPDATE organizations SET deleted = true WHERE id=?")
 @Where(clause = "deleted=false")
-public class OrganizationModel {
+public class Organization {
 
     @Id
     @GeneratedValue

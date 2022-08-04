@@ -6,7 +6,6 @@ import java.util.UUID;
 import lombok.Data;
 
 @Data
-
 public class CategoryDTO implements Serializable{
     
     private UUID id;

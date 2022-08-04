@@ -20,19 +20,19 @@ import lombok.Data;
 @Table(name = "slides")
 public class Slide {
 
-    @Id
-    @GeneratedValue
-    @Type(type = "uuid-char")
-    private UUID id;
+	@Id
+	@GeneratedValue
+	@Type(type = "uuid-char")
+	private UUID id;
 
-    private String imageUrl;
+	private String imageUrl;
 
-    private String text;
+	private String text;
 
-    @Column(length = 5)
-    private String order;
+	@Column(length = 5 , name = "slide_order")
+	private String order;
 
-    @ManyToOne(optional = false, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Organization organizationId;
 
 }

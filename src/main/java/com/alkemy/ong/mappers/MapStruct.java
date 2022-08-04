@@ -1,12 +1,12 @@
 package com.alkemy.ong.mappers;
 
 import com.alkemy.ong.dto.response.organization.OrganizationResponse;
-import com.alkemy.ong.models.OrganizationModel;
+import com.alkemy.ong.models.Organization;
 import org.springframework.stereotype.Component;
 
 @Component
 public class MapStruct {
-    public OrganizationResponse organizationToOrganizationDTO(OrganizationModel organization){
+    public OrganizationResponse organizationToOrganizationDTO(Organization organization){
         if (organization==null)
             return null;
         OrganizationResponse organizationDTO = new OrganizationResponse();
