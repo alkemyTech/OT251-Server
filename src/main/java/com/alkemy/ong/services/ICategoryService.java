@@ -3,6 +3,7 @@ package com.alkemy.ong.services;
 import java.util.List;
 import java.util.UUID;
 
+import com.alkemy.ong.dto.request.category.CategoryRequest;
 import com.alkemy.ong.dto.response.category.CategoryDTO;
 import com.alkemy.ong.models.Category;
 
@@ -11,4 +12,5 @@ public interface ICategoryService {
 
     public Category findById(UUID id);
 
+    public Category save(Category category);
 }
