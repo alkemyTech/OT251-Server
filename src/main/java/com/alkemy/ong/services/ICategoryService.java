@@ -16,4 +16,7 @@ public interface ICategoryService {
     public Category save(Category category);
 
     public CategoryResponse update(UUID id, CategoryRequest categoryRequest);
+
+    public void delete(UUID id);
+
 }
