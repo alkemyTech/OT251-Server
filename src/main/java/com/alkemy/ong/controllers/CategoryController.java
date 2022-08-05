@@ -1,7 +1,8 @@
 package com.alkemy.ong.controllers;
 
 import com.alkemy.ong.dto.request.category.CategoryRequest;
-import com.alkemy.ong.dto.response.category.CategoryDTO;
+import com.alkemy.ong.dto.response.category.CategoryResponse;
+import com.alkemy.ong.dto.response.category.CategorySlimResponse;
 import com.alkemy.ong.mappers.CategoryMapper;
 import com.alkemy.ong.models.Category;
 import com.alkemy.ong.services.ICategoryService;
@@ -32,10 +33,10 @@ public class CategoryController {
     @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value="", method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<Object> getListCategory() {
-        List<CategoryDTO> lista = categoryService.categoryList();
+        List<CategorySlimResponse> lista = categoryService.categoryList();
 
         List<JSONObject> entities = new ArrayList<JSONObject>();
-        for (CategoryDTO n : lista) {
+        for (CategorySlimResponse n : lista) {
             JSONObject catDTO = new JSONObject();
             catDTO.put("id", n.getId()).toString();
             catDTO.put("name", n.getName()).toString();
@@ -46,16 +47,22 @@ public class CategoryController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
-    public ResponseEntity<Category> getCategory(@PathVariable UUID id){
-        return ResponseEntity.status(HttpStatus.OK).body(categoryService.findById(id));
+    public ResponseEntity<CategoryResponse> getCategory(@PathVariable UUID id){
+        return ResponseEntity.status(HttpStatus.OK).body(categoryMapper.categoryToCategoryResponse(categoryService.findById(id)));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<CategoryDTO> createCategory(@RequestBody @Valid CategoryRequest categoryRequest){
+    public ResponseEntity<CategoryResponse> createCategory(@RequestBody @Valid CategoryRequest categoryRequest){
         Category category = categoryMapper.categoryRequestToCategory(categoryRequest);
-        CategoryDTO categoryDTO = categoryMapper.crearDTO(categoryService.save(category));
-        return ResponseEntity.status(HttpStatus.OK).body(categoryDTO);
+        CategoryResponse categoryResponse = categoryMapper.categoryToCategoryResponse(categoryService.save(category));
+        return ResponseEntity.status(HttpStatus.OK).body(categoryResponse);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/{id}")
+    public ResponseEntity<CategoryResponse> updateCategory(@PathVariable UUID id, @RequestBody @Valid CategoryRequest categoryRequest){
+        return ResponseEntity.status(HttpStatus.OK).body(categoryService.update(id,categoryRequest));
     }
 
 }
