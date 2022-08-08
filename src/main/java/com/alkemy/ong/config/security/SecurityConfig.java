@@ -49,11 +49,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.POST, "/auth/register").permitAll()
 				.antMatchers(HttpMethod.POST, "/auth/login").permitAll()
 				.antMatchers(HttpMethod.GET, "/organization/public").permitAll()
-				.antMatchers(HttpMethod.GET, "/slides").permitAll()
+				.antMatchers(HttpMethod.GET, "/slides").hasRole("ADMIN")
 				.antMatchers(HttpMethod.GET,"/categories/{id}").hasRole("ADMIN")
 				.antMatchers(HttpMethod.POST,"/categories").hasRole("ADMIN")
 				.antMatchers(HttpMethod.PUT,"/categories/{id}").hasRole("ADMIN")
-				.antMatchers(HttpMethod.GET,"/news").hasRole("ADMIN")
+				.antMatchers(HttpMethod.GET,"/news/{id}").hasRole("ADMIN")
 				.anyRequest().authenticated().and()
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
