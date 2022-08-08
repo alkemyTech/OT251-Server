@@ -2,6 +2,10 @@ package com.alkemy.ong.services.impl;
 
 import java.util.UUID;
 
+import com.alkemy.ong.dto.request.category.CategoryRequest;
+import com.alkemy.ong.dto.request.news.NewsRequest;
+import com.alkemy.ong.dto.response.category.CategoryResponse;
+import com.alkemy.ong.models.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +21,9 @@ public class NewsServiceImpl implements INewsServices {
 
 	@Autowired
 	private NewsRepository newsRepo;
+
+	@Autowired
+	private NewsRequest newsRequest;
 
 	@Autowired
 	private NewsMapper newsMapper;
@@ -35,6 +42,13 @@ public class NewsServiceImpl implements INewsServices {
 	public NewsResponse getById(UUID id) {
 		News news = newsRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("News", "id", id));
 		return newsMapper.mapNewsResponse(news);
+	}
+
+	@Override
+	public NewsResponse update(UUID id, NewsRequest newsRequest) {
+		newsRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("News", "id", id));
+		News news = newsMapper.newsRequestToNews(newsRequest);
+		return newsMapper.mapNewsResponse(newsRepo.save(news));
 	}
 
 }
