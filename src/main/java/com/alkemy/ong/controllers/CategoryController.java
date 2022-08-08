@@ -65,4 +65,11 @@ public class CategoryController {
         return ResponseEntity.status(HttpStatus.OK).body(categoryService.update(id,categoryRequest));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCategory(@PathVariable UUID id) {
+        categoryService.delete(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
 }
