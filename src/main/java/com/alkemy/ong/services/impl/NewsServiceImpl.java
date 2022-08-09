@@ -2,6 +2,7 @@ package com.alkemy.ong.services.impl;
 
 import java.util.UUID;
 
+import com.alkemy.ong.models.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,13 @@ public class NewsServiceImpl implements INewsServices {
 	public NewsResponse getById(UUID id) {
 		News news = newsRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("News", "id", id));
 		return newsMapper.mapNewsResponse(news);
+	}
+
+	@Override
+	public void delete(UUID id) {
+		News news = newsRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("News", "id", id));
+		news.setDeleted(true);
+		newsRepo.delete(news);
 	}
 
 }

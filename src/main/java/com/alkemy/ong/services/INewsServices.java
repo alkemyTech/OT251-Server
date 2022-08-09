@@ -8,4 +8,6 @@ public interface INewsServices {
 
 	NewsResponse getById(UUID id);
 
+	public void delete(UUID id);
+
 }
