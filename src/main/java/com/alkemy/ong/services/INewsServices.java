@@ -9,6 +9,8 @@ public interface INewsServices {
 
 	NewsResponse getById(UUID id);
 
+	public void delete(UUID id);
+
 	NewsResponse update(UUID id, NewsRequest newsRequest);
 
 }
