@@ -26,11 +26,12 @@ public class NewsServiceImpl implements INewsServices {
 	@Autowired
 	private NewsMapper newsMapper;
         
-        @Autowired
-        private AWSClientServiceImpl awsService;
+	@Autowired
+	private AWSClientServiceImpl awsService;
         
-        @Autowired
-        private CategoryRepository categoryRepo;
+	@Autowired
+	private CategoryRepository categoryRepo;
+
 
 	/*
 	 * Method that searches the database for a news entity through the id.
@@ -47,20 +48,37 @@ public class NewsServiceImpl implements INewsServices {
 		News news = newsRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("News", "id", id));
 		return newsMapper.mapNewsResponse(news);
 	}
+
         
-        @Override
-        public NewsResponse createNews(NewsRequest newsRequest, MultipartFile image) {
+	@Override
+	public NewsResponse createNews(NewsRequest newsRequest, MultipartFile image) {
                         
-            News news = newsMapper.newsRequestToEntity(newsRequest);
-            news.setType("news");
+		News news = newsMapper.newsRequestToEntity(newsRequest);
+		news.setType("news");
             
-            Category category = categoryRepo.findById(newsRequest.getCategoryId()).orElseThrow(() -> new ResourceNotFoundException("Category", "id", newsRequest.getCategoryId()));
-            news.setCategory(category);
+		Category category = categoryRepo.findById(newsRequest.getCategoryId()).orElseThrow(() -> new ResourceNotFoundException("Category", "id", newsRequest.getCategoryId()));
+		news.setCategory(category);
             
-            String imageUrl = awsService.uploadFile(image);
-            news.setImage(imageUrl);
+		String imageUrl = awsService.uploadFile(image);
+		news.setImage(imageUrl);
             
-            return newsMapper.mapNewsResponse(newsRepo.save(news));
-        }
+		return newsMapper.mapNewsResponse(newsRepo.save(news));
+	}
+
+
+	@Override
+	public void delete(UUID id) {
+		News news = newsRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("News", "id", id));
+		news.setDeleted(true);
+		newsRepo.delete(news);
+	}
+
+	@Override
+	public NewsResponse update(UUID id, NewsRequest newsRequest) {
+		newsRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("News", "id", id));
+		News news = newsMapper.newsRequestToEntity(newsRequest);
+		return newsMapper.mapNewsResponse(newsRepo.save(news));
+
+	}
 
 }

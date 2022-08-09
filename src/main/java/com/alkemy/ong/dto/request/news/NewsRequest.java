@@ -7,12 +7,13 @@ import lombok.Data;
 @Data
 public class NewsRequest {
         
-        @NotBlank(message = "The name field cannot be empty")
+    @NotBlank(message = "The name field cannot be empty")
 	private String name;
         
-        @NotBlank(message = "The content field cannot be empty")
+    @NotBlank(message = "The content field cannot be empty")
 	private String content;
         
-        @NotBlank(message = "The category field cannot be empty")
+    @NotBlank(message = "The category field cannot be empty")
 	private UUID categoryId;
+
 }

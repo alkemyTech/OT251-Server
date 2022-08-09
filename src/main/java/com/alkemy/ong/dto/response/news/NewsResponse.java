@@ -13,5 +13,5 @@ public class NewsResponse {
 	private String content;
 	private String image;
 	private Category category;
-        private String type;
+	private String type;
 }

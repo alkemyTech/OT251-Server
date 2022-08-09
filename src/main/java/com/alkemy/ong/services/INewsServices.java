@@ -6,10 +6,16 @@ import java.util.UUID;
 import com.alkemy.ong.dto.response.news.NewsResponse;
 import org.springframework.web.multipart.MultipartFile;
 
+
 public interface INewsServices {
 
-	NewsResponse getById(UUID id);
+	public NewsResponse getById(UUID id);
         
-        NewsResponse createNews(NewsRequest newsRequest, MultipartFile image);
+	public NewsResponse createNews(NewsRequest newsRequest, MultipartFile image);
+
+	public void delete(UUID id);
+
+	public NewsResponse update(UUID id, NewsRequest newsRequest);
+
 
 }

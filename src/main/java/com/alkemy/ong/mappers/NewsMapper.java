@@ -1,10 +1,10 @@
 package com.alkemy.ong.mappers;
 
 import com.alkemy.ong.dto.request.news.NewsRequest;
-import org.springframework.stereotype.Component;
-
 import com.alkemy.ong.dto.response.news.NewsResponse;
 import com.alkemy.ong.models.News;
+
+import org.springframework.stereotype.Component;
 
 @Component
 public class NewsMapper {
@@ -20,6 +20,8 @@ public class NewsMapper {
 	}
         
         public News newsRequestToEntity (NewsRequest newsRequest) {
+				if(newsRequest == null) return null;
+
                 News news = new News();
                 news.setName(newsRequest.getName());
                 news.setContent(newsRequest.getContent());
