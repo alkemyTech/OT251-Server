@@ -12,4 +12,6 @@ public interface ISlideService {
 
 	SlidesDetailsResponse getById(UUID id);
 
+	void delete(UUID id);
+
 }

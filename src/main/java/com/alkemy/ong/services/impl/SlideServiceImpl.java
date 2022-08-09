@@ -12,6 +12,7 @@ import com.alkemy.ong.dto.response.slides.SlidesDetailsResponse;
 import com.alkemy.ong.exception.ResourceNotFoundException;
 import com.alkemy.ong.mappers.SlideMapper;
 import com.alkemy.ong.models.Slide;
+import com.alkemy.ong.models.User;
 import com.alkemy.ong.repositories.SlideRepository;
 import com.alkemy.ong.services.ISlideService;
 
@@ -38,6 +39,13 @@ public class SlideServiceImpl implements ISlideService {
 		Slide slide = slideRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Slide", "id", id));
 		return slideMapper.maptoDetailsResponse(slide);
+	}
+
+	@Override
+	public void delete(UUID id) {
+		Slide slide = slideRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Slide", "id", id));
+		slideRepository.delete(slide);
 	}
 
 }
