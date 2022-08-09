@@ -21,4 +21,10 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 		return new ResponseEntity<>(ErrorDetails, HttpStatus.NOT_FOUND);
 	}
 
+	@ExceptionHandler({ EmailAlreadyExistsException.class })
+	public ResponseEntity<Object> handleResourceNotFound(EmailAlreadyExistsException exception, WebRequest webRequest) {
+		ErrorDetailsResponse ErrorDetails = new ErrorDetailsResponse(new Date(), exception.getMessage(),
+				webRequest.getDescription(false));
+		return new ResponseEntity<>(ErrorDetails, HttpStatus.NOT_FOUND);
+	}
 }
