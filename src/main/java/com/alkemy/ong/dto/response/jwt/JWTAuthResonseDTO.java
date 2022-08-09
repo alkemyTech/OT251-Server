@@ -1,4 +1,4 @@
-package com.alkemy.ong.dto.request.jwt;
+package com.alkemy.ong.dto.response.jwt;
 
 import lombok.Getter;
 import lombok.Setter;
