@@ -30,7 +30,7 @@ public class Slide {
 	private String text;
 
 	@Column(length = 5 , name = "slide_order")
-	private String order;
+	private Integer order;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Organization organizationId;

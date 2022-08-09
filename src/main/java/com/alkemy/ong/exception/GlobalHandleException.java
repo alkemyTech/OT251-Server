@@ -12,7 +12,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import com.alkemy.ong.dto.response.error.ErrorDetailsResponse;
 
 @ControllerAdvice
-public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
+public class GlobalHandleException extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler({ ResourceNotFoundException.class })
 	public ResponseEntity<Object> handleResourceNotFound(ResourceNotFoundException exception, WebRequest webRequest) {
@@ -21,4 +21,17 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 		return new ResponseEntity<>(ErrorDetails, HttpStatus.NOT_FOUND);
 	}
 
+	@ExceptionHandler({ IllegalArgumentException.class })
+	public ResponseEntity<Object> onIllegaArgumentException(IllegalArgumentException exception, WebRequest webRequest) {
+		ErrorDetailsResponse ErrorDetails = new ErrorDetailsResponse(new Date(), exception.getMessage(),
+				webRequest.getDescription(false));
+		return new ResponseEntity<>(ErrorDetails, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler({ RuntimeException.class })
+	public ResponseEntity<Object> handleRuntimeException(RuntimeException exception, WebRequest webRequest) {
+		ErrorDetailsResponse ErrorDetails = new ErrorDetailsResponse(new Date(), exception.getMessage(),
+				webRequest.getDescription(false));
+		return new ResponseEntity<>(ErrorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
 }

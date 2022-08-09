@@ -6,5 +6,5 @@ import lombok.Data;
 public class SlideResponse {
 
 	private String imageUrl;
-	private String order;
+	private Integer order;
 }
