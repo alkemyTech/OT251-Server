@@ -1,8 +1,9 @@
 package com.alkemy.ong.services;
 
-import com.alkemy.ong.models.Contact;
+import com.alkemy.ong.dto.request.contact.ContactRequest;
+import com.alkemy.ong.dto.response.contact.ContactResponse;
 
 public interface IContactService {
 
-    public void save(Contact contact);
+    public ContactResponse save(ContactRequest contactRequest);
 }
