@@ -48,7 +48,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.authorizeRequests()
 				.antMatchers(HttpMethod.POST, "/auth/register").permitAll()
 				.antMatchers(HttpMethod.POST, "/auth/login").permitAll()
+				.antMatchers(HttpMethod.POST, "/contacts").permitAll()
 				.antMatchers(HttpMethod.GET, "/organization/public").permitAll()
+				.antMatchers(HttpMethod.GET, "/contacts").hasRole("ADMIN")
 				.antMatchers(HttpMethod.POST, "/slides").hasRole("ADMIN")
 				.antMatchers(HttpMethod.GET, "/slides").hasRole("ADMIN")
 				.antMatchers(HttpMethod.GET, "/slides/{id}").hasRole("ADMIN")
@@ -57,6 +59,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.PUT,"/categories/{id}").hasRole("ADMIN")
 				.antMatchers(HttpMethod.DELETE,"/categories/{id}").hasRole("ADMIN")
 				.antMatchers(HttpMethod.GET,"/news/{id}").hasRole("ADMIN")
+				.antMatchers(HttpMethod.POST,"/activities").hasRole("ADMIN")
+				.antMatchers(HttpMethod.PUT,"/activities/{id}").hasRole("ADMIN")
 				.anyRequest().authenticated().and()
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
