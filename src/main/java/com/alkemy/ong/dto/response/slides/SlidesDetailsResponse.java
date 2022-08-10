@@ -12,6 +12,6 @@ public class SlidesDetailsResponse {
 	private UUID id;
 	private String imageUrl;
 	private String text;
-	private String order;
+	private Integer order;
     private Organization organizationId;
 }
