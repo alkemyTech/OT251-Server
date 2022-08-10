@@ -1,6 +1,7 @@
 package com.alkemy.ong.mappers;
 
 import com.alkemy.ong.dto.response.organization.OrganizationResponse;
+import com.alkemy.ong.dto.response.slides.SlidesDetailsResponse;
 import com.alkemy.ong.models.Organization;
 import org.springframework.stereotype.Component;
 

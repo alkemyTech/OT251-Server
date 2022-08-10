@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
+import com.alkemy.ong.dto.response.slides.SlidesDetailsResponse;
+import com.alkemy.ong.services.ISlideService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,11 +32,16 @@ public class OrganizationController {
     @Autowired
     MapStruct mapStruct;
 
+    @Autowired
+    ISlideService slideService;
+
     @GetMapping("/public")
     public OrganizationResponse infoOrganization(){
         Optional<Organization> organization = orgServ.findAll().stream().findFirst();
         if(!organization.isPresent()) return null;
-        return mapStruct.organizationToOrganizationDTO(organization.get());
+        OrganizationResponse organizationResponse = mapStruct.organizationToOrganizationDTO(organization.get());
+        organizationResponse.setSlides(slideService.getSlidesByOrganization(organization.get()));
+        return organizationResponse;
     }
     
     @PostMapping("/public")
