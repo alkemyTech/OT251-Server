@@ -16,7 +16,7 @@ public class SlideRequest {
     private String text;
 
     @NotBlank(message = "The order field cannot be empty.")
-    private String order;
+    private Integer order;
 
     private Organization organizationId;
 

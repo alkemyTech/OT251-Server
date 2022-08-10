@@ -4,10 +4,10 @@ import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import com.alkemy.ong.exception.JwtAppException;
+import com.alkemy.ong.models.User;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -27,9 +27,9 @@ public class JwtTokenProvider {
 	private int jwtExpirationInMs;
 	
 	
-	public String generateToken(Authentication authentication) {
+	public String generateToken(User user) {
 		
-		String email = authentication.getName();
+		String email = user.getEmail();
 		Date currentDate = new Date();
 		Date expirationDate = new Date(currentDate.getTime() + jwtExpirationInMs);
 		String token = Jwts.builder().setSubject(email).setIssuedAt(new Date()).setExpiration(expirationDate)
