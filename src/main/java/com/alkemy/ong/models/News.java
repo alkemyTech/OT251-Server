@@ -43,6 +43,9 @@ public class News {
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
+    
+    @Column(nullable = false)
+    private String type;
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
@@ -52,6 +55,6 @@ public class News {
     @Column(nullable = false)
     private Timestamp updatedAt;
 
-    private Boolean deleted;
+    private Boolean deleted = false;
 
 }
