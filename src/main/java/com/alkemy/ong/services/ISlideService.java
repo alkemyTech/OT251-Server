@@ -15,7 +15,8 @@ public interface ISlideService {
 
 	SlidesDetailsResponse getById(UUID id);
 
-	void create(@Valid SlideRequest slideRequest);
+	void delete(UUID id);
 
+	void create(@Valid SlideRequest slideRequest);
 
 }

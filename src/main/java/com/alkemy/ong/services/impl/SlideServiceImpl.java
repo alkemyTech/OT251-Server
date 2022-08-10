@@ -50,6 +50,12 @@ public class SlideServiceImpl implements ISlideService {
 	}
 
 	@Override
+	public void delete(UUID id) {
+		Slide slide = slideRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Slide", "id", id));
+		slideRepository.delete(slide);
+	}
+
 	public void create(SlideRequest slideRequest) throws IllegalArgumentException {
 		Slide slide = slideMapper.map2Entity(slideRequest);
 		MultipartFile decodedImage = imageUtils.base64Image2MultipartFile(slideRequest.getImageUrl());
