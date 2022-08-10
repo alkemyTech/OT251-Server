@@ -4,6 +4,10 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.alkemy.ong.dto.request.organization.OrganizationRequest;
+import com.alkemy.ong.dto.request.slides.SlideRequest;
+import com.alkemy.ong.dto.response.organization.OrganizationResponse;
+import com.alkemy.ong.models.Organization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,4 +44,16 @@ public class SlideServiceImpl implements ISlideService {
 		return slideMapper.maptoDetailsResponse(slide);
 	}
 
+	@Override
+	public SlidesDetailsResponse update(UUID id, SlideRequest slideRequest) {
+		Slide slide = slideRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Slide", "id", id));
+
+		slide.setId(slideRequest.getId());
+		slide.setImageUrl(slideRequest.getImageUrl());
+		slide.setOrder(slideRequest.getOrder());
+		slide.setText(slideRequest.getText());
+		slide.setOrganizationId(slideRequest.getOrganizationId());
+
+		return slideMapper.maptoDetailsResponse(slideRepository.save(slide));
+	}
 }
