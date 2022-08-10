@@ -17,7 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.alkemy.ong.dto.request.slide.SlideRequest;
+import com.alkemy.ong.dto.request.slides.SlideCreateRequest;
+import com.alkemy.ong.dto.request.slides.SlideRequest;
 import com.alkemy.ong.dto.response.slides.SlideResponse;
 import com.alkemy.ong.dto.response.slides.SlidesDetailsResponse;
 import com.alkemy.ong.services.ISlideService;
@@ -31,11 +32,11 @@ public class SlideController {
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping
-	public ResponseEntity<Void> createSlide(@RequestBody @Valid SlideRequest SlideRequest) {
+	public ResponseEntity<Void> createSlide(@RequestBody @Valid SlideCreateRequest SlideRequest) {
 		slideService.create(SlideRequest);
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
-	
+
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping
 	public ResponseEntity<List<SlideResponse>> getAll() {
@@ -46,6 +47,12 @@ public class SlideController {
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<SlidesDetailsResponse> getById(@PathVariable UUID id) {
 		return ResponseEntity.status(HttpStatus.OK).body(slideService.getById(id));
+	}
+
+	@PreAuthorize("hasRole('ADMIN')")
+	@PostMapping("/public")
+	public ResponseEntity<SlidesDetailsResponse> updateSlide(@RequestBody @Valid SlideRequest slideRequest) {
+		return ResponseEntity.status(HttpStatus.OK).body(slideService.update(slideRequest.getId(), slideRequest));
 	}
 
 	@PreAuthorize("hasRole('ADMIN')")

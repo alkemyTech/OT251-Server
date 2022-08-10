@@ -1,4 +1,4 @@
-package com.alkemy.ong.dto.request.slide;
+package com.alkemy.ong.dto.request.slides;
 
 import javax.validation.constraints.NotBlank;
 
@@ -7,7 +7,7 @@ import com.alkemy.ong.models.Organization;
 import lombok.Data;
 
 @Data
-public class SlideRequest {
+public class SlideCreateRequest {
 
 	@NotBlank(message = "File encoded in base64 must be provided.")
 	private String imageUrl;

@@ -9,7 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.alkemy.ong.config.amazons3.services.IAWSClientService;
-import com.alkemy.ong.dto.request.slide.SlideRequest;
+import com.alkemy.ong.dto.request.slides.SlideCreateRequest;
+import com.alkemy.ong.dto.request.slides.SlideRequest;
 import com.alkemy.ong.dto.response.slides.SlideResponse;
 import com.alkemy.ong.dto.response.slides.SlidesDetailsResponse;
 import com.alkemy.ong.exception.ResourceNotFoundException;
@@ -50,14 +51,25 @@ public class SlideServiceImpl implements ISlideService {
 	}
 
 	@Override
+	public SlidesDetailsResponse update(UUID id, SlideRequest slideRequest) {
+		Slide slide = slideRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Slide", "id", id));
+
+		slide.setId(slideRequest.getId());
+		slide.setImageUrl(slideRequest.getImageUrl());
+		slide.setOrder(slideRequest.getOrder());
+		slide.setText(slideRequest.getText());
+		slide.setOrganizationId(slideRequest.getOrganizationId());
+
+		return slideMapper.maptoDetailsResponse(slideRepository.save(slide));
+	}
+
 	public void delete(UUID id) {
-		Slide slide = slideRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Slide", "id", id));
+		Slide slide = slideRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Slide", "id", id));
 		slideRepository.delete(slide);
 	}
 
-	public void create(SlideRequest slideRequest) throws IllegalArgumentException {
-		Slide slide = slideMapper.map2Entity(slideRequest);
+	public void create(SlideCreateRequest slideRequest) throws IllegalArgumentException {
+		Slide slide = slideMapper.mapSlideCreate2Entity(slideRequest);
 		MultipartFile decodedImage = imageUtils.base64Image2MultipartFile(slideRequest.getImageUrl());
 		slide.setImageUrl(awsClientService.uploadFile(decodedImage));
 		slide.setOrder(getOrderOrDefault(slideRequest.getOrder()));
