@@ -1,9 +1,11 @@
 package com.alkemy.ong.services.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.alkemy.ong.models.Organization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -81,5 +83,15 @@ public class SlideServiceImpl implements ISlideService {
 			return (order == null) ? slideRepository.getMaxOrder() + 1 : order;
 		}
 		throw new IllegalArgumentException("Order already exists on the slide ");
+	}
+
+	@Override
+	public List<SlidesDetailsResponse> getSlidesByOrganization(Organization organization){
+		List<Slide> slideEntities = slideRepository.getSlideByOrganization(organization.getId());
+		List<SlidesDetailsResponse> slides = new ArrayList<>();
+		for (Slide slideEntity: slideEntities) {
+			slides.add(slideMapper.maptoDetailsResponse(slideEntity));
+		}
+		return slides;
 	}
 }

@@ -9,6 +9,7 @@ import com.alkemy.ong.dto.request.slides.SlideCreateRequest;
 import com.alkemy.ong.dto.request.slides.SlideRequest;
 import com.alkemy.ong.dto.response.slides.SlideResponse;
 import com.alkemy.ong.dto.response.slides.SlidesDetailsResponse;
+import com.alkemy.ong.models.Organization;
 
 public interface ISlideService {
 
@@ -21,5 +22,7 @@ public interface ISlideService {
 	void delete(UUID id);
 
 	void create(@Valid SlideCreateRequest slideRequest);
+
+	List<SlidesDetailsResponse> getSlidesByOrganization(Organization organization);
 
 }
