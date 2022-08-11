@@ -11,7 +11,7 @@ public interface INewsServices {
 
 	public NewsResponse getById(UUID id);
         
-	public NewsResponse createNews(NewsRequest newsRequest, MultipartFile image);
+	public NewsResponse createNews(NewsRequest newsRequest);
 
 	public void delete(UUID id);
 

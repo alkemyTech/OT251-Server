@@ -11,7 +11,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import com.alkemy.ong.dto.response.news.NewsResponse;
 import com.alkemy.ong.services.INewsServices;
 import javax.validation.Valid;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,9 +21,9 @@ public class NewsController {
 	private INewsServices newsServices;
         
 	@PreAuthorize("hasRole('ADMIN')")
-	@PostMapping("")
-	public ResponseEntity<NewsResponse> createNews(@RequestBody(required = true) @Valid NewsRequest newsRequest, @RequestBody(required = true) MultipartFile image){
-		return ResponseEntity.status(HttpStatus.CREATED).body(newsServices.createNews(newsRequest, image));
+	@PostMapping
+	public ResponseEntity<NewsResponse> createNews(@RequestBody @Valid NewsRequest newsRequest){
+		return ResponseEntity.status(HttpStatus.CREATED).body(newsServices.createNews(newsRequest));
 	}
 
 	@PreAuthorize("hasRole('ADMIN')")
