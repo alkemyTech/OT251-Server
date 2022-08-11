@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public interface IOrganizationService {
     
-    public List<Organization> findAll();
-    
     public OrganizationResponse update (UUID id, OrganizationRequest organizationDTO);
+
+    public OrganizationResponse getPublicInfo();
 }

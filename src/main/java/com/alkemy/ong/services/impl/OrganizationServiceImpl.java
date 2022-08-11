@@ -3,6 +3,7 @@ package com.alkemy.ong.services.impl;
 import java.util.List;
 import java.util.UUID;
 
+import com.alkemy.ong.services.ISlideService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,10 +24,8 @@ public class OrganizationServiceImpl implements IOrganizationService{
     @Autowired
     private MapStruct mapStruct;
 
-    @Override
-    public List<Organization> findAll() {
-        return orgRepo.findAll();
-    }
+    @Autowired
+    private ISlideService slideService;
 
     @Override
     public OrganizationResponse update(UUID id, OrganizationRequest organizationDTO) {
@@ -36,6 +35,15 @@ public class OrganizationServiceImpl implements IOrganizationService{
         organization.setPhone(organizationDTO.getPhone());
         organization.setAddress(organizationDTO.getAddress());
         return mapStruct.organizationToOrganizationDTO(orgRepo.save(organization));
+    }
+
+    @Override
+    public OrganizationResponse getPublicInfo(){
+        Organization organization = orgRepo.findAll().stream().findFirst()
+                .orElseThrow(() -> new ResourceNotFoundException());
+        OrganizationResponse organizationResponse = mapStruct.organizationToOrganizationDTO(organization);
+        organizationResponse.setSlides(slideService.getSlidesByOrganization(organization));
+        return organizationResponse;
     }
     
 }

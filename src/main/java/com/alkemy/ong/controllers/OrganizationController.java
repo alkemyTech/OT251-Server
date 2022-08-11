@@ -6,6 +6,7 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import com.alkemy.ong.dto.response.slides.SlidesDetailsResponse;
+import com.alkemy.ong.exception.ResourceNotFoundException;
 import com.alkemy.ong.services.ISlideService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,12 +37,8 @@ public class OrganizationController {
     ISlideService slideService;
 
     @GetMapping("/public")
-    public OrganizationResponse infoOrganization(){
-        Optional<Organization> organization = orgServ.findAll().stream().findFirst();
-        if(!organization.isPresent()) return null;
-        OrganizationResponse organizationResponse = mapStruct.organizationToOrganizationDTO(organization.get());
-        organizationResponse.setSlides(slideService.getSlidesByOrganization(organization.get()));
-        return organizationResponse;
+    public ResponseEntity<OrganizationResponse> infoOrganization() {
+        return ResponseEntity.status(HttpStatus.OK).body(orgServ.getPublicInfo());
     }
     
     @PostMapping("/public")
