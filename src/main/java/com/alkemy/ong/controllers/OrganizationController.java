@@ -38,11 +38,7 @@ public class OrganizationController {
 
     @GetMapping("/public")
     public ResponseEntity<OrganizationResponse> infoOrganization() {
-        Organization organization = orgServ.findAll().stream().findFirst()
-                .orElseThrow(() -> new ResourceNotFoundException());
-        OrganizationResponse organizationResponse = mapStruct.organizationToOrganizationDTO(organization);
-        organizationResponse.setSlides(slideService.getSlidesByOrganization(organization));
-        return ResponseEntity.status(HttpStatus.OK).body(organizationResponse);
+        return ResponseEntity.status(HttpStatus.OK).body(orgServ.getPublicInfo());
     }
     
     @PostMapping("/public")
