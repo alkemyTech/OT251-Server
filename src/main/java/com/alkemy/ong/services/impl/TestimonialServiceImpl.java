@@ -9,6 +9,7 @@ import com.alkemy.ong.exception.ResourceNotFoundException;
 import com.alkemy.ong.mappers.TestimonialMapper;
 import com.alkemy.ong.models.Category;
 import com.alkemy.ong.models.News;
+import com.alkemy.ong.models.Slide;
 import com.alkemy.ong.models.Testimonial;
 import com.alkemy.ong.repositories.TestimonialRepository;
 import com.alkemy.ong.services.ITestimonialService;
@@ -16,6 +17,8 @@ import com.alkemy.ong.utils.ImageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.UUID;
 
 @Service
 public class TestimonialServiceImpl implements ITestimonialService {
@@ -41,6 +44,12 @@ public class TestimonialServiceImpl implements ITestimonialService {
         testimonial.setImage(awsService.uploadFile(decodedImage));
 
         return testimonialMapper.mapTestimonialResponse(testimonialRepo.save(testimonial));
+    }
+
+    @Override
+    public void delete(UUID id) {
+        Testimonial testimonial = testimonialRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Testimonial", "id", id));
+        testimonialRepo.delete(testimonial);
     }
 
 }
