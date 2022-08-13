@@ -56,15 +56,15 @@ public class UserAuthServiceImpl implements IUserAuthService {
 			throw new EmailAlreadyExistsException(
 					"There is an account with that email adress:" + userRegister.getEmail());
 		}
-		User user = userMapper.mapModel(userRegister);
+		emailService.sendMailRegister(userRegister.getEmail());
 
+		User user = userMapper.mapModel(userRegister);
 		List<Role> roles = new ArrayList();
 		Role role = roleRepo.findByName("USER");
 		roles.add(role);
 		user.setRoles(roles);
 		userRepository.save(user);
 		String token = jwtTokenProvider.generateToken(user);
-		emailService.sendMailRegister(userRegister.getEmail());
 		return new JWTAuthResonseDTO(token);
 	}
 
