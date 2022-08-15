@@ -42,6 +42,9 @@ public class Organization {
     private String welcomeText;
     @Column(columnDefinition = "TEXT")
     private String aboutUsText;
+    private String facebookUrl;
+    private String linkedinUrl;
+    private String instagramUrl;
     @Column
     @Temporal(TemporalType.TIMESTAMP)
     private Date timestamps;

@@ -15,5 +15,8 @@ public class OrganizationResponse {
     private String image;
     private Integer phone;
     private String address;
+    private String facebookUrl;
+    private String instagramUrl;
+    private String linkedinUrl;
     private List<SlidesDetailsResponse> slides;
 }
