@@ -1,5 +1,8 @@
 package com.alkemy.ong.services;
 
+import java.util.UUID;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.data.domain.Page;
@@ -15,5 +18,7 @@ public interface ICommentService {
 	Page<CommentListResponse> getAllComents(Pageable pageable);
 
 	CommentResponse save(@Valid CommentRequest commentRequest);
+
+	CommentResponse update(UUID id, @Valid CommentRequest updateCommentRequest, HttpServletRequest httpServletRequest);
 
 }
