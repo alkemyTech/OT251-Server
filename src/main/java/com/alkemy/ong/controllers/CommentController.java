@@ -9,9 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,7 +50,15 @@ public class CommentController {
 	@PutMapping("/{id}")
 	@Transactional
 	public ResponseEntity<CommentResponse> update(@PathVariable UUID id,
-			@Valid @RequestBody CommentRequest commentRequest , HttpServletRequest httpServletRequest) {
+			@Valid @RequestBody CommentRequest commentRequest, HttpServletRequest httpServletRequest) {
 		return ResponseEntity.ok().body(commentService.update(id, commentRequest, httpServletRequest));
+	}
+
+	@PreAuthorize("hasRole('USER')")
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Void> delete(@PathVariable UUID id,
+			@Valid @RequestBody CommentRequest commentRequest, HttpServletRequest httpServletRequest) {
+		commentService.delete(id, commentRequest, httpServletRequest);
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 }
