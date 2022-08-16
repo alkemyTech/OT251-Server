@@ -21,4 +21,6 @@ public interface ICommentService {
 
 	CommentResponse update(UUID id, @Valid CommentRequest updateCommentRequest, HttpServletRequest httpServletRequest);
 
+	void delete(UUID id, @Valid CommentRequest commentRequest, HttpServletRequest httpServletRequest);
+
 }

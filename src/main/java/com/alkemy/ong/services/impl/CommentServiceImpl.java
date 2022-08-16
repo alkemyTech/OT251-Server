@@ -94,6 +94,22 @@ public class CommentServiceImpl implements ICommentService {
 		
 	}
 
+	@Override
+	public void delete(UUID id, @Valid CommentRequest commentRequest, HttpServletRequest httpServletRequest) {
+		String token = httpServletRequest.getHeader("Authorization").substring(7);
+		String email = jwtTokenProvider.GetUsernameJWT(token);
+		List<String> roles = jwtTokenProvider.extractRoles(token);
+
+		if (validUser(email, id) || isAdmin(roles)) {
+			Comment comment = commentMapper.commentRequest2Comments(commentRequest);
+			comment = commentRepository.findById(id)
+					.orElseThrow(() -> new ResourceNotFoundException("Comment", "id", id));
+			commentRepository.delete(comment);
+		}else {
+			throw new ForbiddenException("You do not have permission to delete this comment you need to be the owner or administrator");
+		}		
+	}
+	
 	public Boolean validUser(String email, UUID commentId) {
 		Optional<String> owner = commentRepository.findOwnerEmail(commentId);
 		return owner.map(s -> s.equals(email)).orElse(false);
@@ -102,4 +118,6 @@ public class CommentServiceImpl implements ICommentService {
 	private boolean isAdmin(List<String> roles) {
 		return roles.contains("ADMIN");
 	}
+
+	
 }
