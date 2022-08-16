@@ -69,7 +69,7 @@ public class UserAuthServiceImpl implements IUserAuthService {
 	}
 
 	@Override
-	public Page<UserResponse> getAllUsers(Pageable pageable){
+	public Page<UserResponse> getAllUsers(Pageable pageable) {
 		Page<User> users = userRepository.findAll(pageable);
 		Page<UserResponse> dto = users.map(user -> userMapper.mapResponse(user));
 		return dto;
