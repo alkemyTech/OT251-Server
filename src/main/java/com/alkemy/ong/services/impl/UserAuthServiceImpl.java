@@ -15,9 +15,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.alkemy.ong.config.security.auth.JwtTokenProvider;
-import com.alkemy.ong.dto.request.jwt.JWTAuthResonseDTO;
 import com.alkemy.ong.dto.request.user.UserLoginRequest;
 import com.alkemy.ong.dto.request.user.UserRegisterRequest;
+import com.alkemy.ong.dto.response.jwt.JWTAuthResonseDTO;
 import com.alkemy.ong.dto.response.user.UserAuthenticatedResponse;
 import com.alkemy.ong.dto.response.user.UserResponse;
 import com.alkemy.ong.exception.EmailAlreadyExistsException;
@@ -51,7 +51,7 @@ public class UserAuthServiceImpl implements IUserAuthService {
 	private JwtTokenProvider jwtTokenProvider;
 
 	@Override
-	public UserResponse register(UserRegisterRequest userRegister) throws EmailAlreadyExistsException {
+	public JWTAuthResonseDTO register(UserRegisterRequest userRegister) {
 		if (userRepository.existsByEmail(userRegister.getEmail())) {
 			throw new EmailAlreadyExistsException(
 					"There is an account with that email adress:" + userRegister.getEmail());
@@ -62,10 +62,10 @@ public class UserAuthServiceImpl implements IUserAuthService {
 		Role role = roleRepo.findByName("USER");
 		roles.add(role);
 		user.setRoles(roles);
+		userRepository.save(user);
+		String token = jwtTokenProvider.generateToken(user);
 		emailService.sendMailRegister(userRegister.getEmail());
-
-		return userMapper.mapResponse(userRepository.save(user));
-
+		return new JWTAuthResonseDTO(token);
 	}
 
 	@Override
@@ -80,7 +80,8 @@ public class UserAuthServiceImpl implements IUserAuthService {
 		Authentication auth = authenticationManager
 				.authenticate(new UsernamePasswordAuthenticationToken(userLogin.getEmail(), userLogin.getPassword()));
 		SecurityContextHolder.getContext().setAuthentication(auth);
-		String token = jwtTokenProvider.generateToken(auth);
+		User user = userRepository.findByEmail(auth.getName());
+		String token = jwtTokenProvider.generateToken(user);
 		return new JWTAuthResonseDTO(token);
 	}
 

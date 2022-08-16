@@ -10,4 +10,6 @@ import com.alkemy.ong.models.Activity;
 @Repository
 public interface ActivityRepository extends  JpaRepository<Activity, UUID> {
 
+    public Activity findByName(String name);
+
 }
