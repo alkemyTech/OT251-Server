@@ -23,4 +23,6 @@ public interface ICommentService {
 
 	void delete(UUID id, @Valid CommentRequest commentRequest, HttpServletRequest httpServletRequest);
 
+	Page<CommentListResponse> getCommentsByNewsId(UUID id, Pageable pageable);
+
 }

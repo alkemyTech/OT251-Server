@@ -88,10 +88,11 @@ public class CommentServiceImpl implements ICommentService {
 			comment.setBody(comment.getBody());
 			commentRepository.save(comment);
 			return commentMapper.comments2CommentsResponse(comment);
-		}else {
-			throw new ForbiddenException("You do not have permission to modify this comment you need to be the owner or administrator");
+		} else {
+			throw new ForbiddenException(
+					"You do not have permission to modify this comment you need to be the owner or administrator");
 		}
-		
+
 	}
 
 	@Override
@@ -105,11 +106,26 @@ public class CommentServiceImpl implements ICommentService {
 			comment = commentRepository.findById(id)
 					.orElseThrow(() -> new ResourceNotFoundException("Comment", "id", id));
 			commentRepository.delete(comment);
-		}else {
-			throw new ForbiddenException("You do not have permission to delete this comment you need to be the owner or administrator");
-		}		
+		} else {
+			throw new ForbiddenException(
+					"You do not have permission to delete this comment you need to be the owner or administrator");
+		}
 	}
-	
+
+	@Override
+	public Page<CommentListResponse> getCommentsByNewsId(UUID id, Pageable pageable) {
+		List<Comment> commentsList = commentRepository.findCommentsByNewsId(id);
+		if (commentsList.isEmpty()) {
+			throw new ResourceNotFoundException("News", "id", id);
+		} else {
+			List<CommentListResponse> commentListResponse;
+			commentListResponse = commentMapper.comment2CommentList(commentsList);
+			final int start = (int) pageable.getOffset();
+			final int end = Math.min((start + pageable.getPageSize()), commentListResponse.size());
+			return new PageImpl<>(commentListResponse.subList(start, end), pageable, commentListResponse.size());
+		}
+	}
+
 	public Boolean validUser(String email, UUID commentId) {
 		Optional<String> owner = commentRepository.findOwnerEmail(commentId);
 		return owner.map(s -> s.equals(email)).orElse(false);
@@ -119,5 +135,4 @@ public class CommentServiceImpl implements ICommentService {
 		return roles.contains("ADMIN");
 	}
 
-	
 }
