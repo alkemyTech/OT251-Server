@@ -50,6 +50,7 @@ public class CommentMapper {
 		comment.setUserId(userRepository.findById(commentRequest.getNewId()).get());
 		return comment;
 	}
+	
 
 
 }
