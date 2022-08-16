@@ -18,6 +18,11 @@ public class MemberController {
     @Autowired
     IMemberService memberService;
 
+    @GetMapping
+    public ResponseEntity getMembers(){
+        return ResponseEntity.status(HttpStatus.OK).body(memberService.findAll());
+    }
+
     @PostMapping
     public ResponseEntity<MemberResponse> createMember(@RequestBody @Valid MemberRequest memberRequest){
         return ResponseEntity.status(HttpStatus.CREATED).body(memberService.createMember(memberRequest));
