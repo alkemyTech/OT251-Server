@@ -13,4 +13,6 @@ public interface IMemberService {
     MemberResponse updateMember(UUID id, MemberRequest memberRequest);
 
     List<MemberResponse> findAll();
+
+    void delete(UUID id);
 }

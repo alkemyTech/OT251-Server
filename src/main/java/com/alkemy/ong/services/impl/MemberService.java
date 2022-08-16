@@ -47,4 +47,10 @@ public class MemberService implements IMemberService {
         }
         return members.stream().map(member -> memberMapper.memberToMemberResponse(member)).collect(Collectors.toList());
     }
+
+    @Override
+    public void delete(UUID id) {
+        Member member =memberRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Members", "id", id));
+        memberRepository.delete(member);
+    }
 }
