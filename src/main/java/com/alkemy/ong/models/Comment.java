@@ -26,7 +26,7 @@ import lombok.Data;
 public class Comment {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue
 	@Type(type = "uuid-char")
 	private UUID id;
 

@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class CommentListResponse {
 
-	String body;
+	private String body;
 }
