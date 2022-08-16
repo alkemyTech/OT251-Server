@@ -20,4 +20,6 @@ public interface CommentRepository extends JpaRepository<Comment, UUID> {
 	            "where c.comments_id = ?1", nativeQuery = true)
 	Optional<String> findOwnerEmail(UUID commentId);
 
+	List<Comment> findCommentsByNewsId(UUID id);
+
 }
