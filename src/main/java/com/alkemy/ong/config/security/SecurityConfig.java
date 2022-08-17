@@ -40,6 +40,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		return new JwtAuthenticationFilter();
 	}
 
+	private final String[] swaggerEndpoints ={
+			"/swagger-resources/**",
+			"/swagger-ui/**", "/v2/api-docs",
+			"/v3/api-docs",
+			"/api/docs",
+			"/api/docs/**",
+			"/api/docs/swagger-ui",
+			"/**/swagger-ui/**",
+			"/swagger-ui"
+	};
+
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
 		httpSecurity
@@ -52,6 +63,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.POST, "/auth/login").permitAll()
 				.antMatchers(HttpMethod.POST, "/contacts").permitAll()
 				.antMatchers(HttpMethod.GET, "/organization/public").permitAll()
+				.antMatchers(swaggerEndpoints).permitAll()
 				.antMatchers(HttpMethod.GET, "/contacts").hasRole("ADMIN")
 				.antMatchers(HttpMethod.POST, "/slides").hasRole("ADMIN")
 				.antMatchers(HttpMethod.GET, "/slides").hasRole("ADMIN")
