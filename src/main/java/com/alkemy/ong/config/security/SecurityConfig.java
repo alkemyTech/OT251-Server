@@ -40,12 +40,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		return new JwtAuthenticationFilter();
 	}
 
+	private final String[] swaggerEndpoints ={
+			"/swagger-resources/**",
+			"/swagger-ui/**", "/v2/api-docs",
+			"/v3/api-docs",
+			"/api/docs",
+			"/api/docs/**",
+			"/api/docs/swagger-ui",
+			"/**/swagger-ui/**",
+			"/swagger-ui"
+	};
+
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
 		httpSecurity
 				.csrf().disable()
 				.exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
 				.authorizeRequests()
+				.antMatchers(swaggerEndpoints).permitAll()
 				.antMatchers(HttpMethod.GET, "/comments").permitAll()
 				.antMatchers(HttpMethod.POST, "/comments").permitAll()
 				.antMatchers(HttpMethod.POST, "/auth/register").permitAll()
