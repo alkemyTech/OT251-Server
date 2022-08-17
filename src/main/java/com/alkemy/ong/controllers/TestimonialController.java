@@ -1,18 +1,18 @@
 package com.alkemy.ong.controllers;
 
 import com.alkemy.ong.dto.request.testimonial.TestimonialRequest;
+import com.alkemy.ong.dto.response.testimonial.TestimonialPageResponse;
 import com.alkemy.ong.dto.response.testimonial.TestimonialResponse;
 import com.alkemy.ong.services.ITestimonialService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+
+import static com.alkemy.ong.utils.ApiConstants.BOTH;
 
 @RestController
 @RequestMapping("/testimonials")
@@ -20,6 +20,12 @@ public class TestimonialController {
 
     @Autowired
     private ITestimonialService testimonialService;
+
+    @GetMapping(path = "/get-all")
+    @PreAuthorize(BOTH)
+    public ResponseEntity<TestimonialPageResponse> getTestimonials(@RequestParam(defaultValue = "1") Integer page) {
+        return ResponseEntity.ok(testimonialService.getAllTestimonials(page));
+    }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping

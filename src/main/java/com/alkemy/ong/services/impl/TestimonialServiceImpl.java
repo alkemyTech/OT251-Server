@@ -1,24 +1,26 @@
 package com.alkemy.ong.services.impl;
 
 import com.alkemy.ong.config.amazons3.services.impl.AWSClientServiceImpl;
-import com.alkemy.ong.dto.request.news.NewsRequest;
 import com.alkemy.ong.dto.request.testimonial.TestimonialRequest;
-import com.alkemy.ong.dto.response.news.NewsResponse;
 import com.alkemy.ong.dto.response.testimonial.TestimonialResponse;
-import com.alkemy.ong.exception.ResourceNotFoundException;
 import com.alkemy.ong.mappers.TestimonialMapper;
-import com.alkemy.ong.models.Category;
-import com.alkemy.ong.models.News;
 import com.alkemy.ong.models.Testimonial;
+import com.alkemy.ong.dto.response.testimonial.TestimonialPageResponse;
 import com.alkemy.ong.repositories.TestimonialRepository;
 import com.alkemy.ong.services.ITestimonialService;
+import com.alkemy.ong.utils.ClassUtil;
 import com.alkemy.ong.utils.ImageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.UUID;
+
+import static com.alkemy.ong.utils.ApiConstants.PATH_TESTIMONIALS;
+
 @Service
-public class TestimonialServiceImpl implements ITestimonialService {
+public class TestimonialServiceImpl  extends ClassUtil<Testimonial, UUID, TestimonialRepository> implements ITestimonialService {
 
     @Autowired
     private TestimonialMapper testimonialMapper;
@@ -41,6 +43,14 @@ public class TestimonialServiceImpl implements ITestimonialService {
         testimonial.setImage(awsService.uploadFile(decodedImage));
 
         return testimonialMapper.mapTestimonialResponse(testimonialRepo.save(testimonial));
+    }
+
+    @Override
+    public TestimonialPageResponse getAllTestimonials(Integer numberOfPage) {
+        Page<Testimonial> page = (Page<Testimonial>) getPage(numberOfPage);
+        String previous = getPrevious(PATH_TESTIMONIALS, numberOfPage);
+        String next = getNext(page, PATH_TESTIMONIALS, numberOfPage);
+        return testimonialMapper.entityPage2PageResponse(page.getContent(), previous, next);
     }
 
 }
