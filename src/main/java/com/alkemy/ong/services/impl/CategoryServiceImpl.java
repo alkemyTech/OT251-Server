@@ -5,12 +5,16 @@ import java.util.List;
 import java.util.UUID;
 
 import com.alkemy.ong.dto.request.category.CategoryRequest;
-import com.alkemy.ong.dto.response.category.CategoryResponse;
+import com.alkemy.ong.dto.response.category.CategoryDetailsResponse;
 import com.alkemy.ong.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.alkemy.ong.dto.response.category.CategorySlimResponse;
+import com.alkemy.ong.dto.response.category.CategoryResponse;
 import com.alkemy.ong.mappers.CategoryMapper;
 import com.alkemy.ong.models.Category;
 import com.alkemy.ong.repositories.CategoryRepository;
@@ -25,17 +29,19 @@ public class CategoryServiceImpl implements ICategoryService{
     @Autowired
     private CategoryMapper categoryMapper;
 
-    private List<CategorySlimResponse> listaDto = new ArrayList<CategorySlimResponse>();
-
     @Override
-    public List<CategorySlimResponse> categoryList() {
-        List<Category> lista = categoryRepo.findAll();
-        CategorySlimResponse categorySlimResponse = new CategorySlimResponse();
-        for (int i=0;i<lista.size();i++) {
-            categorySlimResponse = categoryMapper.categoryToCategorySlimResponse(lista.get(i));
-            listaDto.add(categorySlimResponse);
-        }    
-        return listaDto;
+    public Page<CategoryResponse> getCategories(Pageable pageable) {
+        List<Category> categories = categoryRepo.findAll(Sort.by("name"));
+        List<CategoryResponse> responses = new ArrayList<>();
+        if (categories.isEmpty()) {
+            throw new ResourceNotFoundException("List Category");
+        }
+        for (Category category:categories) {
+            responses.add(categoryMapper.categoryToCategorySlimResponse(category));
+        }
+        final int start = (int) pageable.getOffset();
+        final int end = Math.min((start + pageable.getPageSize()), responses.size());
+        return new PageImpl<>(responses.subList(start, end), pageable, responses.size());
     }
 
     @Override
@@ -50,11 +56,11 @@ public class CategoryServiceImpl implements ICategoryService{
     }
 
     @Override
-    public CategoryResponse update(UUID id, CategoryRequest categoryRequest) {
+    public CategoryDetailsResponse update(UUID id, CategoryRequest categoryRequest) {
         categoryRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Category", "id", id));
         Category category = categoryMapper.categoryRequestToCategory(categoryRequest);
         category.setId(id);
-        return categoryMapper.categoryToCategoryResponse(categoryRepo.save(category));
+        return categoryMapper.categoryToCategoryDetailsResponse(categoryRepo.save(category));
     }
 
     @Override
