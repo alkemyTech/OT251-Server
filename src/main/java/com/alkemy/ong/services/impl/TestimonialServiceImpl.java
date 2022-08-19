@@ -12,6 +12,9 @@ import com.alkemy.ong.utils.ClassUtil;
 import com.alkemy.ong.utils.ImageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -47,9 +50,12 @@ public class TestimonialServiceImpl  extends ClassUtil<Testimonial, UUID, Testim
 
     @Override
     public TestimonialPageResponse getAllTestimonials(Integer numberOfPage) {
-        Page<Testimonial> page = (Page<Testimonial>) getPage(numberOfPage);
+        Page<Testimonial> page = getPage(numberOfPage);
+
         String previous = getPrevious(PATH_TESTIMONIALS, numberOfPage);
+
         String next = getNext(page, PATH_TESTIMONIALS, numberOfPage);
+
         return testimonialMapper.entityPage2PageResponse(page.getContent(), previous, next);
     }
 

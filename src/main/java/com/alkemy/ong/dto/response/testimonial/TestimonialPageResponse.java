@@ -16,6 +16,9 @@ import java.util.List;
 public class TestimonialPageResponse {
 
     private List<TestimonialResponse> testimonials;
+
     private String previous;
+
     private String next;
+
 }

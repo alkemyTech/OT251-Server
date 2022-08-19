@@ -22,7 +22,7 @@ public class TestimonialController {
     private ITestimonialService testimonialService;
 
     @GetMapping(path = "/get-all")
-    @PreAuthorize(BOTH)
+    //@PreAuthorize(BOTH)
     public ResponseEntity<TestimonialPageResponse> getTestimonials(@RequestParam(defaultValue = "1") Integer page) {
         return ResponseEntity.ok(testimonialService.getAllTestimonials(page));
     }
