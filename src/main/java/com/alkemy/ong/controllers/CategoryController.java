@@ -3,6 +3,8 @@ package com.alkemy.ong.controllers;
 import com.alkemy.ong.dto.request.category.CategoryRequest;
 import com.alkemy.ong.dto.response.category.CategoryDetailsResponse;
 import com.alkemy.ong.dto.response.category.CategoryResponse;
+import com.alkemy.ong.dto.response.pagination.PageResultResponse;
+import com.alkemy.ong.dto.response.testimonial.TestimonialResponse;
 import com.alkemy.ong.mappers.CategoryMapper;
 import com.alkemy.ong.models.Category;
 import com.alkemy.ong.services.ICategoryService;
@@ -31,8 +33,8 @@ public class CategoryController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
-    public ResponseEntity<Page<CategoryResponse>> getCategoryList(@PageableDefault(size = 10) Pageable pageable) {
-        return ResponseEntity.status(HttpStatus.OK).body(categoryService.getCategories(pageable));
+    public ResponseEntity<PageResultResponse<CategoryResponse>> getCategoryList(@RequestParam(defaultValue = "1") Integer page) {
+        return ResponseEntity.status(HttpStatus.OK).body(categoryService.getCategories(page));
     }
 
     @PreAuthorize("hasRole('ADMIN')")

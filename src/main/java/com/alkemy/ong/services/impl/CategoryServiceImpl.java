@@ -6,12 +6,14 @@ import java.util.UUID;
 
 import com.alkemy.ong.dto.request.category.CategoryRequest;
 import com.alkemy.ong.dto.response.category.CategoryDetailsResponse;
+import com.alkemy.ong.dto.response.pagination.PageResultResponse;
+import com.alkemy.ong.dto.response.testimonial.TestimonialResponse;
 import com.alkemy.ong.exception.ResourceNotFoundException;
+import com.alkemy.ong.mappers.PageResultMapper;
+import com.alkemy.ong.models.Testimonial;
+import com.alkemy.ong.utils.ClassUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import com.alkemy.ong.dto.response.category.CategoryResponse;
@@ -21,7 +23,7 @@ import com.alkemy.ong.repositories.CategoryRepository;
 import com.alkemy.ong.services.ICategoryService;
 
 @Service
-public class CategoryServiceImpl implements ICategoryService{
+public class CategoryServiceImpl extends ClassUtils<Category, UUID> implements ICategoryService{
 
     @Autowired   
     private CategoryRepository categoryRepo;
@@ -29,19 +31,20 @@ public class CategoryServiceImpl implements ICategoryService{
     @Autowired
     private CategoryMapper categoryMapper;
 
+    private final String PATH_CATEGORY = "http://localhost:8080/categories?page=%d";
+
     @Override
-    public Page<CategoryResponse> getCategories(Pageable pageable) {
-        List<Category> categories = categoryRepo.findAll(Sort.by("name"));
-        List<CategoryResponse> responses = new ArrayList<>();
-        if (categories.isEmpty()) {
-            throw new ResourceNotFoundException("List Category");
+    public PageResultResponse<CategoryResponse> getCategories(Integer pageNumber) {
+        Page<Category> page = categoryRepo.findAll(PageRequest.of(pageNumber-1, 10));
+        if(!page.hasContent()){
+            throw new ResourceNotFoundException();
         }
-        for (Category category:categories) {
-            responses.add(categoryMapper.categoryToCategorySlimResponse(category));
-        }
-        final int start = (int) pageable.getOffset();
-        final int end = Math.min((start + pageable.getPageSize()), responses.size());
-        return new PageImpl<>(responses.subList(start, end), pageable, responses.size());
+        List<CategoryResponse> categoryResponses = categoryMapper.entities2ListResponse(page.getContent());
+        String previous = getPrevious(PATH_CATEGORY, pageNumber);
+        String next = getNext(page, PATH_CATEGORY, pageNumber);
+
+        PageResultMapper<CategoryResponse> response = new PageResultMapper<>();
+        return response.mapPage(categoryResponses, previous, next);
     }
 
     @Override

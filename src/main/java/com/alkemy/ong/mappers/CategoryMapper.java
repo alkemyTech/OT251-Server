@@ -2,10 +2,15 @@ package com.alkemy.ong.mappers;
 
 import com.alkemy.ong.dto.request.category.CategoryRequest;
 import com.alkemy.ong.dto.response.category.CategoryDetailsResponse;
+import com.alkemy.ong.dto.response.testimonial.TestimonialResponse;
+import com.alkemy.ong.models.Testimonial;
 import org.springframework.stereotype.Component;
 
 import com.alkemy.ong.dto.response.category.CategoryResponse;
 import com.alkemy.ong.models.Category;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class CategoryMapper {
@@ -36,6 +41,12 @@ public class CategoryMapper {
         category.setDescription(categoryRequest.getDescription());
         category.setImage(categoryRequest.getImage());
         return category;
+    }
+
+    public List<CategoryResponse> entities2ListResponse(List<Category> categories){
+        return categories.stream()
+                .map(this::categoryToCategorySlimResponse)
+                .collect(Collectors.toList());
     }
 
 }
