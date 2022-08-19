@@ -24,7 +24,7 @@ public class ContactController {
         return ResponseEntity.status(HttpStatus.CREATED).body(contactService.save(contactRequest));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping
     public ResponseEntity<List<ContactResponse>> getAll(){
         return ResponseEntity.status(HttpStatus.OK).body(contactService.getAll());

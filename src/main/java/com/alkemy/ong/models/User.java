@@ -1,7 +1,7 @@
 package com.alkemy.ong.models;
 
 import java.sql.Timestamp;
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -10,6 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
@@ -28,37 +29,37 @@ import lombok.Data;
 @Where(clause = "deleted=false")
 public class User {
 
-    @Id
-    @GeneratedValue
-    @Type(type = "uuid-char")
-    private UUID id;
+	@Id
+	@GeneratedValue
+	@Type(type = "uuid-char")
+	private UUID id;
 
-    @Column(nullable = false)
-    private String firstName;
+	@Column(nullable = false)
+	private String firstName;
 
-    @Column(nullable = false)
-    private String lastName;
+	@Column(nullable = false)
+	private String lastName;
 
-    @Column(unique = true, nullable = false)
-    private String email;
+	@Column(unique = true, nullable = false)
+	private String email;
 
-    @Column(nullable = false)
-    private String password;
+	@Column(nullable = false)
+	private String password;
 
-    private String photo;
+	private String photo;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "roleId")
-    private List<Role> roles;
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+	private Set<Role> roles;
 
-    @CreationTimestamp
-    @Column(nullable = false, updatable = false)
-    private Timestamp createAt;
+	@CreationTimestamp
+	@Column(nullable = false, updatable = false)
+	private Timestamp createAt;
 
-    @UpdateTimestamp
-    @Column(nullable = false)
-    private Timestamp updateAt;
+	@UpdateTimestamp
+	@Column(nullable = false)
+	private Timestamp updateAt;
 
-    private Boolean deleted = false;
+	private Boolean deleted = false;
 
 }
