@@ -1,4 +1,4 @@
-package com.alkemy.ong.config.security.auth;
+package com.alkemy.ong.config.security.jwt.utils;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
+import com.alkemy.ong.config.security.user.UserDetailsImpl;
 import com.alkemy.ong.exception.JwtAppException;
-import com.alkemy.ong.models.User;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -23,40 +23,36 @@ import io.jsonwebtoken.UnsupportedJwtException;
 public class JwtTokenProvider {
 
 	@Value("${app.jwt-secret}")
-	private String jwtSecret;
+	private String SECRET_KEY;
 
 	@Value("${app.jwt-expiration-milliseconds}")
-	private int jwtExpirationInMs;
+	private int JWT_EXPIRATIONINMS;
 
-	public String generateToken(User user) {
-
-		String email = user.getEmail();
+	public String generateAccessToken(UserDetailsImpl user) {
 		Date currentDate = new Date();
-		Date expirationDate = new Date(currentDate.getTime() + jwtExpirationInMs);
-		String token = Jwts.builder().setSubject(email).setIssuedAt(new Date()).setExpiration(expirationDate)
-				.signWith(SignatureAlgorithm.HS512, jwtSecret).compact();
-
-		return token;
+		return Jwts.builder().setSubject(String.format(user.getEmail())).setIssuer("ONG251")
+				.claim("roles", user.getRoles().toString()).setIssuedAt(new Date())
+				.setExpiration(new Date(currentDate.getTime() + JWT_EXPIRATIONINMS))
+				.signWith(SignatureAlgorithm.HS512, SECRET_KEY).compact();
 	}
 
-	public String GetUsernameJWT(String token) {
-		Claims claims = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
-		return claims.getSubject();
+	public String getUsernameJWT(String token) {
+		return parseClaims(token).getSubject();
 	}
 
 	public List<String> extractRoles(String token) {
-		return (List<String>) Jwts.parser().setSigningKey(jwtSecret.getBytes(StandardCharsets.UTF_8))
+		return (List<String>) Jwts.parser().setSigningKey(SECRET_KEY.getBytes(StandardCharsets.UTF_8))
 				.parseClaimsJws(token).getBody().get("roles");
 	}
 
-	private Claims extractAllClaims(String token) {
-		return Jwts.parser().setSigningKey(jwtSecret.getBytes(StandardCharsets.UTF_8)).parseClaimsJws(token).getBody();
+	public Claims parseClaims(String token) {
+		return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
 	}
 
 	public boolean validateToken(String token) {
 
 		try {
-			Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
+			Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token);
 			return true;
 		} catch (SignatureException e) {
 			throw new JwtAppException(HttpStatus.BAD_REQUEST, "Invalid JWT Signature");

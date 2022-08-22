@@ -1,7 +1,7 @@
 package com.alkemy.ong.services.impl;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -14,7 +14,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import com.alkemy.ong.config.security.auth.JwtTokenProvider;
+import com.alkemy.ong.config.security.jwt.utils.JwtTokenProvider;
+import com.alkemy.ong.config.security.user.UserDetailsImpl;
 import com.alkemy.ong.dto.request.user.UserLoginRequest;
 import com.alkemy.ong.dto.request.user.UserRegisterRequest;
 import com.alkemy.ong.dto.response.jwt.JWTAuthResonseDTO;
@@ -39,7 +40,7 @@ public class UserAuthServiceImpl implements IUserAuthService {
 	private UserRepository userRepository;
 
 	@Autowired
-	private RoleRepository roleRepo;
+	private RoleRepository roleRepository;
 
 	@Autowired
 	private IMailSenderService emailService;
@@ -56,23 +57,22 @@ public class UserAuthServiceImpl implements IUserAuthService {
 			throw new EmailAlreadyExistsException(
 					"There is an account with that email adress:" + userRegister.getEmail());
 		}
+		emailService.sendMailRegister(userRegister.getEmail());
+
 		User user = userMapper.mapModel(userRegister);
 
-		List<Role> roles = new ArrayList();
-		Role role = roleRepo.findByName("USER");
+		Set<Role> roles = new HashSet<>();
+		Role role = roleRepository.findByName("ROLE_ADMIN");
 		roles.add(role);
 		user.setRoles(roles);
-		userRepository.save(user);
-		String token = jwtTokenProvider.generateToken(user);
-		emailService.sendMailRegister(userRegister.getEmail());
-		return new JWTAuthResonseDTO(token);
-	}
 
-	@Override
-	public Page<UserResponse> getAllUsers(Pageable pageable){
-		Page<User> users = userRepository.findAll(pageable);
-		Page<UserResponse> dto = users.map(user -> userMapper.mapResponse(user));
-		return dto;
+		userRepository.save(user);
+
+		String token = jwtTokenProvider
+				.generateAccessToken(new UserDetailsImpl(user.getEmail(), user.getPassword(), user.getRoles()));
+		emailService.sendMailRegister(userRegister.getEmail());
+
+		return new JWTAuthResonseDTO(token);
 	}
 
 	@Override
@@ -81,14 +81,15 @@ public class UserAuthServiceImpl implements IUserAuthService {
 				.authenticate(new UsernamePasswordAuthenticationToken(userLogin.getEmail(), userLogin.getPassword()));
 		SecurityContextHolder.getContext().setAuthentication(auth);
 		User user = userRepository.findByEmail(auth.getName());
-		String token = jwtTokenProvider.generateToken(user);
+		String token = jwtTokenProvider.generateAccessToken(
+				new UserDetailsImpl(user.getEmail(), user.getPassword(), (Set<Role>) user.getRoles()));
 		return new JWTAuthResonseDTO(token);
 	}
 
 	@Override
 	public UserAuthenticatedResponse getUserAuth(HttpServletRequest httpServletRequest) {
 		String token = httpServletRequest.getHeader("Authorization").substring(7);
-		User user = userRepository.findByEmail(jwtTokenProvider.GetUsernameJWT(token));
+		User user = userRepository.findByEmail(jwtTokenProvider.getUsernameJWT(token));
 		return userMapper.mapResponseAuthenticate(user);
 	}
 

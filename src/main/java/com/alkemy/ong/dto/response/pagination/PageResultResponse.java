@@ -14,7 +14,8 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PageResultResponse<T> {
 
-    private List<T> content = new ArrayList<>();
-    private String next_page_url;
-    private String previous_page_url;
+	private List<T> content = new ArrayList<>();
+	private String next_page_url;
+	private String previous_page_url;
+
 }

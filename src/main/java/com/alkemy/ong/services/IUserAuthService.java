@@ -14,10 +14,8 @@ public interface IUserAuthService {
 
 	JWTAuthResonseDTO register(UserRegisterRequest UserRegisterRequest);
 
-	public Page<UserResponse> getAllUsers(Pageable pageable);
-	
 	JWTAuthResonseDTO loginUser(UserLoginRequest userLogin);
-	
+
 	UserAuthenticatedResponse getUserAuth(HttpServletRequest httpServletRequest);
 
 }
