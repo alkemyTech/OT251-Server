@@ -1,6 +1,8 @@
 package com.alkemy.ong.config.security.auth;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -19,49 +21,53 @@ import io.jsonwebtoken.UnsupportedJwtException;
 
 @Component
 public class JwtTokenProvider {
-	
+
 	@Value("${app.jwt-secret}")
 	private String jwtSecret;
-	
+
 	@Value("${app.jwt-expiration-milliseconds}")
 	private int jwtExpirationInMs;
-	
-	
+
 	public String generateToken(User user) {
-		
+
 		String email = user.getEmail();
 		Date currentDate = new Date();
 		Date expirationDate = new Date(currentDate.getTime() + jwtExpirationInMs);
 		String token = Jwts.builder().setSubject(email).setIssuedAt(new Date()).setExpiration(expirationDate)
 				.signWith(SignatureAlgorithm.HS512, jwtSecret).compact();
-		
+
 		return token;
 	}
-	
+
 	public String GetUsernameJWT(String token) {
 		Claims claims = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
 		return claims.getSubject();
 	}
-	
+
+	public List<String> extractRoles(String token) {
+		return (List<String>) Jwts.parser().setSigningKey(jwtSecret.getBytes(StandardCharsets.UTF_8))
+				.parseClaimsJws(token).getBody().get("roles");
+	}
+
+	private Claims extractAllClaims(String token) {
+		return Jwts.parser().setSigningKey(jwtSecret.getBytes(StandardCharsets.UTF_8)).parseClaimsJws(token).getBody();
+	}
+
 	public boolean validateToken(String token) {
-		
+
 		try {
 			Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
 			return true;
-		}catch (SignatureException e) {
-			throw new JwtAppException(HttpStatus.BAD_REQUEST,"Invalid JWT Signature");
-		}
-		catch (MalformedJwtException e) {
-			throw new JwtAppException(HttpStatus.BAD_REQUEST,"Invalid JWT token");
-		}
-		catch (ExpiredJwtException e) {
-			throw new JwtAppException(HttpStatus.BAD_REQUEST,"Expired JWT Token");
-		}
-		catch (UnsupportedJwtException e) {
-			throw new JwtAppException(HttpStatus.BAD_REQUEST,"JWT token not supported");
-		}
-		catch (IllegalArgumentException e) {
-			throw new JwtAppException(HttpStatus.BAD_REQUEST,"The claims JWT string is empty");
+		} catch (SignatureException e) {
+			throw new JwtAppException(HttpStatus.BAD_REQUEST, "Invalid JWT Signature");
+		} catch (MalformedJwtException e) {
+			throw new JwtAppException(HttpStatus.BAD_REQUEST, "Invalid JWT token");
+		} catch (ExpiredJwtException e) {
+			throw new JwtAppException(HttpStatus.BAD_REQUEST, "Expired JWT Token");
+		} catch (UnsupportedJwtException e) {
+			throw new JwtAppException(HttpStatus.BAD_REQUEST, "JWT token not supported");
+		} catch (IllegalArgumentException e) {
+			throw new JwtAppException(HttpStatus.BAD_REQUEST, "The claims JWT string is empty");
 		}
 	}
 

@@ -16,20 +16,28 @@ import java.util.UUID;
 @RequestMapping("/testimonials")
 public class TestimonialController {
 
-    @Autowired
-    private ITestimonialService testimonialService;
+	@Autowired
+	private ITestimonialService testimonialService;
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping
-    public ResponseEntity<TestimonialResponse> createTestimonials(@RequestBody @Valid TestimonialRequest testimonialRequest) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(testimonialService.createTestimonial(testimonialRequest));
-    }
+	@PreAuthorize("hasRole('ADMIN')")
+	@PostMapping
+	public ResponseEntity<TestimonialResponse> createTestimonials(
+			@RequestBody @Valid TestimonialRequest testimonialRequest) {
+		return ResponseEntity.status(HttpStatus.CREATED).body(testimonialService.createTestimonial(testimonialRequest));
+	}
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> deleteTestimonial(@PathVariable UUID id) {
-        testimonialService.delete(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
+	@PreAuthorize("hasRole('ADMIN')")
+	@DeleteMapping(value = "/{id}")
+	public ResponseEntity<Void> deleteTestimonial(@PathVariable UUID id) {
+		testimonialService.delete(id);
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+	}
+
+	@PostMapping("/public")
+	public ResponseEntity<TestimonialResponse> updateTestimonial(
+			@RequestBody @Valid TestimonialRequest testimonialRequest) {
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(testimonialService.update(testimonialRequest.getId(), testimonialRequest));
+	}
 
 }

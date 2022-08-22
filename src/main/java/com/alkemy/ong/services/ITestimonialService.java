@@ -11,4 +11,6 @@ public interface ITestimonialService {
 
     public void delete(UUID id);
 
+    public TestimonialResponse update(UUID id, TestimonialRequest testimoniaRequest);
+
 }
