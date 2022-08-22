@@ -7,6 +7,7 @@ import lombok.Setter;
 @Setter
 public class JWTAuthResonseDTO {
 
+//	@ApiModelProperty(name = "accessToken", value = "Access Token JWT", dataType = "String")
 	private String accessToken;
 
 	public JWTAuthResonseDTO(String accessToken) {
