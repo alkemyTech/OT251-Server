@@ -1,6 +1,5 @@
 package com.alkemy.ong.config.security;
 
-import com.amazonaws.services.xray.model.Http;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -80,6 +79,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.GET, "/contacts").hasRole("ADMIN")
 				.antMatchers(HttpMethod.POST, "/contacts").permitAll()
 				/*/members*/
+				.antMatchers(HttpMethod.GET, "/members").hasRole("ADMIN")
+				.antMatchers(HttpMethod.POST, "/members").hasRole("ADMIN")
+				.antMatchers(HttpMethod.PUT, "/members/{id}").hasRole("ADMIN")
 				.antMatchers(HttpMethod.DELETE, "/members/{id}").hasRole("ADMIN")
 				/*/news*/
 				.antMatchers(HttpMethod.GET,"/news/{id}").hasRole("ADMIN")

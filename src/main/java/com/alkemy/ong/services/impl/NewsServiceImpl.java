@@ -1,12 +1,17 @@
 package com.alkemy.ong.services.impl;
 
-import com.alkemy.ong.config.amazons3.services.IAWSClientService;
 import com.alkemy.ong.config.amazons3.services.impl.AWSClientServiceImpl;
 import com.alkemy.ong.dto.request.news.NewsRequest;
+
+import java.util.List;
 import java.util.UUID;
 
+import com.alkemy.ong.dto.response.pagination.PageResultResponse;
+import com.alkemy.ong.mappers.PageResultMapper;
+import com.alkemy.ong.utils.ClassUtils;
 import com.alkemy.ong.utils.ImageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import com.alkemy.ong.dto.response.news.NewsResponse;
@@ -19,8 +24,10 @@ import com.alkemy.ong.repositories.NewsRepository;
 import com.alkemy.ong.services.INewsServices;
 import org.springframework.web.multipart.MultipartFile;
 
+import static com.alkemy.ong.utils.ApiConstants.PATH_NEWS;
+
 @Service
-public class NewsServiceImpl implements INewsServices {
+public class NewsServiceImpl extends ClassUtils<News, UUID, NewsRepository> implements INewsServices {
 
 	@Autowired
 	private NewsRepository newsRepo;
@@ -37,23 +44,11 @@ public class NewsServiceImpl implements INewsServices {
 	@Autowired
 	private ImageUtils imageUtils;
 
-
-	/*
-	 * Method that searches the database for a news entity through the id.
-	 *
-	 * @param @Type UUID id must not be {@literal null}.
-	 *
-	 * @return @Type NewsResponse must not be {@literal null}.
-	 *
-	 * @throws ResourceNotFoundException if {@literal id} is {@literal null}.
-	 *
-	 */
 	@Override
 	public NewsResponse getById(UUID id) {
 		News news = newsRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("News", "id", id));
 		return newsMapper.mapNewsResponse(news);
 	}
-
         
 	@Override
 	public NewsResponse createNews(NewsRequest newsRequest) {
@@ -70,7 +65,6 @@ public class NewsServiceImpl implements INewsServices {
 		return newsMapper.mapNewsResponse(newsRepo.save(news));
 	}
 
-
 	@Override
 	public void delete(UUID id) {
 		News news = newsRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("News", "id", id));
@@ -85,4 +79,17 @@ public class NewsServiceImpl implements INewsServices {
 		return newsMapper.mapNewsResponse(newsRepo.save(news));
 	}
 
+	@Override
+	public PageResultResponse<NewsResponse> getNewsList(Integer pageNumber) {
+		Page<News> page = getPage(pageNumber);
+		if(!page.hasContent()){
+			throw new ResourceNotFoundException();
+		}
+		List<NewsResponse> newsResponses = newsMapper.entities2ListResponse(page.getContent());
+		String previous = getPrevious(PATH_NEWS, pageNumber);
+		String next = getNext(page, PATH_NEWS, pageNumber);
+
+		PageResultMapper<NewsResponse> response = new PageResultMapper<>();
+		return response.mapPage(newsResponses, previous, next);
+	}
 }
