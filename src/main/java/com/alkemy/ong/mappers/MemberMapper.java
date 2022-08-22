@@ -5,6 +5,9 @@ import com.alkemy.ong.dto.response.member.MemberResponse;
 import com.alkemy.ong.models.Member;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Component
 public class MemberMapper {
 
@@ -33,5 +36,11 @@ public class MemberMapper {
         memberResponse.setInstagramUrl(member.getInstagramUrl());
         memberResponse.setLinkedinUrl(member.getLinkedinUrl());
         return memberResponse;
+    }
+
+    public List<MemberResponse> entities2ListResponse(List<Member> memberList){
+        return memberList.stream()
+                .map(this::memberToMemberResponse)
+                .collect(Collectors.toList());
     }
 }

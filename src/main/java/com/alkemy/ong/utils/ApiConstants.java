@@ -9,5 +9,6 @@ public interface ApiConstants {
 
     //Paths
     String PATH_TESTIMONIALS = "http://localhost:8080/testimonials/get-all?page=%d";
+    String PATH_MEMBERS = "http://localhost:8080/members?page=%d";
 
 }
