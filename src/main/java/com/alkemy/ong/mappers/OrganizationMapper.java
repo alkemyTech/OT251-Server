@@ -17,6 +17,9 @@ public class OrganizationMapper {
         organizationDTO.setImage(organization.getImage());
         organizationDTO.setPhone(organization.getPhone());
         organizationDTO.setAddress(organization.getAddress());
+        organizationDTO.setFacebookUrl(organization.getFacebookUrl());
+        organizationDTO.setLinkedinUrl(organization.getLinkedinUrl());
+        organizationDTO.setInstagramUrl(organization.getInstagramUrl());
 
         return organizationDTO;
     }
