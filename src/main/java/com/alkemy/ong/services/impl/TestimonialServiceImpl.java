@@ -1,14 +1,13 @@
 package com.alkemy.ong.services.impl;
 
 import com.alkemy.ong.config.amazons3.services.impl.AWSClientServiceImpl;
-import com.alkemy.ong.dto.request.news.NewsRequest;
+import com.alkemy.ong.dto.request.slides.SlideRequest;
 import com.alkemy.ong.dto.request.testimonial.TestimonialRequest;
-import com.alkemy.ong.dto.response.news.NewsResponse;
+import com.alkemy.ong.dto.response.slides.SlidesDetailsResponse;
 import com.alkemy.ong.dto.response.testimonial.TestimonialResponse;
 import com.alkemy.ong.exception.ResourceNotFoundException;
 import com.alkemy.ong.mappers.TestimonialMapper;
-import com.alkemy.ong.models.Category;
-import com.alkemy.ong.models.News;
+import com.alkemy.ong.models.Slide;
 import com.alkemy.ong.models.Testimonial;
 import com.alkemy.ong.repositories.TestimonialRepository;
 import com.alkemy.ong.services.ITestimonialService;
@@ -16,6 +15,8 @@ import com.alkemy.ong.utils.ImageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.UUID;
 
 @Service
 public class TestimonialServiceImpl implements ITestimonialService {
@@ -42,5 +43,18 @@ public class TestimonialServiceImpl implements ITestimonialService {
 
         return testimonialMapper.mapTestimonialResponse(testimonialRepo.save(testimonial));
     }
+
+    @Override
+    public TestimonialResponse update(UUID id, TestimonialRequest testimoniaRequest) {
+        Testimonial testimonial = testimonialRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Testimonial", "id", id));
+
+        testimonial.setId(testimoniaRequest.getId());
+        testimonial.setName(testimoniaRequest.getName());
+        testimonial.setImage(testimoniaRequest.getImage());
+        testimonial.setContent(testimoniaRequest.getContent());
+
+        return testimonialMapper.mapTestimonialResponse(testimonialRepo.save(testimonial));
+    }
+
 
 }
