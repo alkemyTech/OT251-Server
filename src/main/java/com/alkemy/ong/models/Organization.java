@@ -38,6 +38,9 @@ public class Organization {
     private int phone;
     @Column(nullable = false)
     private String email;
+    private String facebookUrl;
+    private String linkedinUrl;
+    private String instagramUrl;
     @Column(columnDefinition = "TEXT",nullable = false)
     private String welcomeText;
     @Column(columnDefinition = "TEXT")

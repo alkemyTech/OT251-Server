@@ -1,7 +1,6 @@
 package com.alkemy.ong.dto.response.organization;
 
 import com.alkemy.ong.dto.response.slides.SlidesDetailsResponse;
-import com.alkemy.ong.models.Slide;
 import lombok.Data;
 
 import java.util.List;
@@ -15,5 +14,8 @@ public class OrganizationResponse {
     private String image;
     private Integer phone;
     private String address;
+    private String facebookUrl;
+    private String linkedinUrl;
+    private String instagramUrl;
     private List<SlidesDetailsResponse> slides;
 }

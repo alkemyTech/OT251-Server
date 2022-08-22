@@ -1,22 +1,21 @@
 package com.alkemy.ong.config.database;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
+
 import com.alkemy.ong.models.Activity;
-import com.alkemy.ong.models.Category;
 import com.alkemy.ong.models.Role;
 import com.alkemy.ong.models.User;
 import com.alkemy.ong.repositories.ActivityRepository;
 import com.alkemy.ong.repositories.RoleRepository;
 import com.alkemy.ong.repositories.UserRepository;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 @Component
 public class DataBaseInitialization implements CommandLineRunner {
@@ -32,6 +31,7 @@ public class DataBaseInitialization implements CommandLineRunner {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+  
 
 	private static final List<String> NAMES_ADMIN = List.of("Maximiliano", "Fabricio", "Aaron", "Natali", "Jose",
 			"Jesus", "Carlos", "Maria", "Luz", "Pilar");
@@ -55,18 +55,18 @@ public class DataBaseInitialization implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
-		if (roleRepo.findByName("USER") == null) {
-			Role user = new Role();
-			user.setName("USER");
-			user.setDescription("User default.");
-			roleRepo.save(user);
-		}
-		if (roleRepo.findByName("ADMIN") == null) {
-			Role admin = new Role();
-			admin.setName("ADMIN");
-			admin.setDescription("User with administrator permissions.");
-			roleRepo.save(admin);
-		}
+	      if(roleRepo.findByName("ROLE_USER") == null){
+	            Role user = new Role();
+	            user.setName("ROLE_USER");
+	            user.setDescription("User default.");
+	            roleRepo.save(user);
+	        }
+	        if(roleRepo.findByName("ROLE_ADMIN") == null){
+	            Role admin = new Role();
+	            admin.setName("ROLE_ADMIN");
+	            admin.setDescription("User with administrator permissions.");
+	            roleRepo.save(admin);
+	        }
 
 		List<Activity> activities = new ArrayList<>();
 		Activity activity1 = new Activity();
@@ -133,23 +133,27 @@ public class DataBaseInitialization implements CommandLineRunner {
 	}
 
 	private void createAdminUsers() {
-		List<Role> roleAdmin = Collections.singletonList(roleRepo.findByName("ADMIN"));
+		Set<Role> roles = new HashSet<>();
+		Role role = roleRepo.findByName("ROLE_ADMIN");
+		roles.add(role);
 		for (int index = 0; index < 10; index++) {
 			createUser(NAMES_ADMIN.get(index), LAST_NAMES_ADMIN.get(index), EMAILS_ADMIN.get(index),
-					PASSWORDS_ADMIN.get(index), roleAdmin);
+					PASSWORDS_ADMIN.get(index), roles);
 		}
 	}
 
 	private void createStandardUsers() {
-		List<Role> roleUser = Collections.singletonList(roleRepo.findByName("USER"));
-
+		Set<Role> roles = new HashSet<>();
+		Role role = roleRepo.findByName("ROLE_USER");
+		roles.add(role);
+		
 		for (int index = 0; index < 10; index++) {
 			createUser(NAMES_USER.get(index), LAST_NAMES_USER.get(index), EMAILS_USER.get(index),
-					PASSWORDS_USER.get(index), roleUser);
+					PASSWORDS_USER.get(index), roles);
 		}
 	}
 
-	private void createUser(String firstName, String lastName, String email, String password, List<Role> role) {
+	private void createUser(String firstName, String lastName, String email, String password, Set<Role> roles) {
 		User user = new User();
 		user.setFirstName(firstName);
 		user.setLastName(lastName);
@@ -158,7 +162,7 @@ public class DataBaseInitialization implements CommandLineRunner {
 		user.setPhoto("image.jpg");
 		user.setDeleted(false);
 		userRepository.save(user);
-		user.setRoles(role);
+		user.setRoles(roles);
 		userRepository.save(user);
 	}
 }
