@@ -1,14 +1,16 @@
 package com.alkemy.ong.dto.request.user;
 
-import com.alkemy.ong.models.Role;
-import lombok.Data;
+import java.util.Set;
+import java.util.UUID;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
-import java.util.List;
-import java.util.UUID;
+
+import com.alkemy.ong.models.Role;
+
+import lombok.Data;
 
 @Data
 public class UserUpdateRequest {
@@ -34,6 +36,6 @@ public class UserUpdateRequest {
 	private String photo;
 
 	@NotBlank(message = "The roles field cannot be empty.")
-	private List<Role> roles;
+	private Set<Role> roles;
 
 }

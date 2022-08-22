@@ -36,20 +36,20 @@ public class NewsController {
 
 	@Autowired
 	private ICommentService commentService;
-	
-	@PreAuthorize("hasRole('ADMIN')")
+
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@PostMapping
 	public ResponseEntity<NewsResponse> createNews(@RequestBody @Valid NewsRequest newsRequest) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(newsServices.createNews(newsRequest));
 	}
 
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@GetMapping("/{id}")
 	public ResponseEntity<NewsResponse> getNewsById(@PathVariable UUID id) {
 		return ResponseEntity.status(HttpStatus.OK).body(newsServices.getById(id));
 	}
 
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deleteNews(@PathVariable UUID id) {
 		newsServices.delete(id);
@@ -62,7 +62,8 @@ public class NewsController {
 	}
 
 	@GetMapping("/{id}/comments")
-	public ResponseEntity<Page<CommentListResponse>> listCommentsByNewsId(@PageableDefault(size = 10) Pageable pageable,@PathVariable(value = "id") UUID id) {
+	public ResponseEntity<Page<CommentListResponse>> listCommentsByNewsId(@PageableDefault(size = 10) Pageable pageable,
+			@PathVariable(value = "id") UUID id) {
 		return ResponseEntity.ok(commentService.getCommentsByNewsId(id, pageable));
 	}
 }

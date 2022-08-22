@@ -30,7 +30,7 @@ public class CategoryController {
     @Autowired
     private CategoryMapper categoryMapper;
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value="", method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<Object> getListCategory() {
         List<CategorySlimResponse> lista = categoryService.categoryList();
@@ -45,13 +45,13 @@ public class CategoryController {
         return new ResponseEntity<Object>(entities, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<CategoryResponse> getCategory(@PathVariable UUID id){
         return ResponseEntity.status(HttpStatus.OK).body(categoryMapper.categoryToCategoryResponse(categoryService.findById(id)));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<CategoryResponse> createCategory(@RequestBody @Valid CategoryRequest categoryRequest){
         Category category = categoryMapper.categoryRequestToCategory(categoryRequest);
@@ -59,13 +59,13 @@ public class CategoryController {
         return ResponseEntity.status(HttpStatus.OK).body(categoryResponse);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<CategoryResponse> updateCategory(@PathVariable UUID id, @RequestBody @Valid CategoryRequest categoryRequest){
         return ResponseEntity.status(HttpStatus.OK).body(categoryService.update(id,categoryRequest));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCategory(@PathVariable UUID id) {
         categoryService.delete(id);
