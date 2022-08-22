@@ -6,4 +6,6 @@ public interface IMailSenderService {
     
     public void sendMailRegister(String email);
 
+    public void sendMailContact(String email);
+
 }
