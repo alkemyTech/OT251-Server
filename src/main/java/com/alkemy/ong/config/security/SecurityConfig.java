@@ -39,6 +39,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		return new BCryptPasswordEncoder();
 	}
 
+	private final String[] swaggerEndpoints ={
+			"/swagger-resources/**",
+			"/swagger-ui/**", "/v2/api-docs",
+			"/v3/api-docs",
+			"/api/docs",
+			"/api/docs/**",
+			"/api/docs/swagger-ui",
+			"/**/swagger-ui/**",
+			"/swagger-ui"
+	};
+
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
 		httpSecurity

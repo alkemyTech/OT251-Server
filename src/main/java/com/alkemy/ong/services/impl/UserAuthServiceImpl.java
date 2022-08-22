@@ -57,13 +57,15 @@ public class UserAuthServiceImpl implements IUserAuthService {
 			throw new EmailAlreadyExistsException(
 					"There is an account with that email adress:" + userRegister.getEmail());
 		}
+		emailService.sendMailRegister(userRegister.getEmail());
+		
 		User user = userMapper.mapModel(userRegister);
-
+	
 		Set<Role> roles = new HashSet<>();
 		Role role = roleRepository.findByName("ROLE_ADMIN");
 		roles.add(role);
 		user.setRoles(roles);
-
+		
 		userRepository.save(user);
 
 		String token = jwtTokenProvider

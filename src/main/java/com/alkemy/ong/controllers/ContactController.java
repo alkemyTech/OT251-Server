@@ -21,7 +21,7 @@ public class ContactController {
 
     @PostMapping
     public ResponseEntity<ContactResponse> createContact(@RequestBody @Valid ContactRequest contactRequest){
-        return ResponseEntity.status(HttpStatus.CREATED).body(contactService.save(contactRequest));
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(contactService.save(contactRequest));
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
