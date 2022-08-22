@@ -41,4 +41,11 @@ public class GlobalHandleException extends ResponseEntityExceptionHandler {
 				webRequest.getDescription(false));
 		return new ResponseEntity<>(ErrorDetails, HttpStatus.CONFLICT);
 	}
+	
+	@ExceptionHandler({ ForbiddenException.class })
+	public ResponseEntity<Object> handleOngRequestException(ForbiddenException exception, WebRequest webRequest) {
+		ErrorDetailsResponse ErrorDetails = new ErrorDetailsResponse(new Date(), exception.getMessage(),
+				webRequest.getDescription(false));
+		return new ResponseEntity<>(ErrorDetails, HttpStatus.FORBIDDEN);
+	}
 }
