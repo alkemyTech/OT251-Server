@@ -1,21 +1,23 @@
 package com.alkemy.ong.services;
 
-import java.util.List;
 import java.util.UUID;
 
 import com.alkemy.ong.dto.request.category.CategoryRequest;
+import com.alkemy.ong.dto.response.category.CategoryDetailsResponse;
 import com.alkemy.ong.dto.response.category.CategoryResponse;
-import com.alkemy.ong.dto.response.category.CategorySlimResponse;
+import com.alkemy.ong.dto.response.pagination.PageResultResponse;
 import com.alkemy.ong.models.Category;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface ICategoryService {
-    public List<CategorySlimResponse> categoryList();
+    public PageResultResponse<CategoryResponse> getCategories(Integer pageNumber);
 
     public Category findById(UUID id);
 
     public Category save(Category category);
 
-    public CategoryResponse update(UUID id, CategoryRequest categoryRequest);
+    public CategoryDetailsResponse update(UUID id, CategoryRequest categoryRequest);
 
     public void delete(UUID id);
 
