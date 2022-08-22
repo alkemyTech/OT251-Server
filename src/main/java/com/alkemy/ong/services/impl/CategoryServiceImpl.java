@@ -23,7 +23,7 @@ import com.alkemy.ong.repositories.CategoryRepository;
 import com.alkemy.ong.services.ICategoryService;
 
 @Service
-public class CategoryServiceImpl extends ClassUtils<Category, UUID> implements ICategoryService{
+public class CategoryServiceImpl extends ClassUtils<Category, UUID, CategoryRepository> implements ICategoryService{
 
     @Autowired   
     private CategoryRepository categoryRepo;
