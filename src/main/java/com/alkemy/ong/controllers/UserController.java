@@ -1,6 +1,5 @@
 package com.alkemy.ong.controllers;
 
-
 import java.util.UUID;
 
 import com.alkemy.ong.services.IUserAuthService;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import com.alkemy.ong.services.IUserService;
 
-
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -24,23 +22,20 @@ public class UserController {
 	@Autowired
 	private IUserService userService;
 
-	@Autowired
-	private IUserAuthService userServiceAuth;
-
 	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<Void> deleteUser(@PathVariable UUID id){
+	public ResponseEntity<Void> deleteUser(@PathVariable UUID id) {
 		userService.delete(id);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@GetMapping
-	public Page<UserResponse> getAllUsers(Pageable pageable){
-		return userServiceAuth.getAllUsers(pageable);
+	public Page<UserResponse> getAllUsers(Pageable pageable) {
+		return userService.getAllUsers(pageable);
 	}
 
 	@PatchMapping("/{id}")
-	public ResponseEntity<UserResponse> editUser(@PathVariable UUID id, @RequestBody UserUpdateRequest user){
-		return ResponseEntity.status(HttpStatus.OK).body(userService.update(id,user));
+	public ResponseEntity<UserResponse> editUser(@PathVariable UUID id, @RequestBody UserUpdateRequest user) {
+		return ResponseEntity.status(HttpStatus.OK).body(userService.update(id, user));
 	}
 }

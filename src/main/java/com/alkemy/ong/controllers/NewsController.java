@@ -44,7 +44,7 @@ public class NewsController {
 	@ApiResponses(value = {
 			@ApiResponse(code = 201, message = "CREATED - News create successfully"),
 			@ApiResponse(code = 400, message = "BAD REQUEST - Param invalid")})
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@PostMapping
 	public ResponseEntity<NewsResponse> createNews(@RequestBody @Valid NewsRequest newsRequest) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(newsServices.createNews(newsRequest));
@@ -54,7 +54,7 @@ public class NewsController {
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "OK - Return News details"),
 			@ApiResponse(code = 404, message = "NOT FOUND - A News with that ID is Not Found")})
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@GetMapping("/{id}")
 	public ResponseEntity<NewsResponse> getNewsById(@PathVariable UUID id) {
 		return ResponseEntity.status(HttpStatus.OK).body(newsServices.getById(id));
@@ -64,7 +64,7 @@ public class NewsController {
 	@ApiResponses(value = {
 			@ApiResponse(code = 204, message = "NO CONTENT - News delete successfully"),
 			@ApiResponse(code = 404, message = "NOT FOUND - A News with that ID is Not Found")})
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deleteNews(@PathVariable UUID id) {
 		newsServices.delete(id);
@@ -86,7 +86,8 @@ public class NewsController {
 			@ApiResponse(code = 200, message = "OK - Return comments"),
 			@ApiResponse(code = 404, message = "NOT FOUND - A News with that ID is Not Found")})
 	@GetMapping("/{id}/comments")
-	public ResponseEntity<Page<CommentListResponse>> listCommentsByNewsId(@PageableDefault(size = 10) Pageable pageable,@PathVariable(value = "id") UUID id) {
+	public ResponseEntity<Page<CommentListResponse>> listCommentsByNewsId(@PageableDefault(size = 10) Pageable pageable,
+			@PathVariable(value = "id") UUID id) {
 		return ResponseEntity.ok(commentService.getCommentsByNewsId(id, pageable));
 	}
 }

@@ -37,7 +37,7 @@ public class OrganizationController {
         return ResponseEntity.status(HttpStatus.OK).body(orgServ.getPublicInfo());
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/public")
     public ResponseEntity<OrganizationResponse> updateOrganization(@RequestBody @Valid OrganizationRequest organization){
         return ResponseEntity.status(HttpStatus.OK).body(orgServ.update(organization.getId(), organization));

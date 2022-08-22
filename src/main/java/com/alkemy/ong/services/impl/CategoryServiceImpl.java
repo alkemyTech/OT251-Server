@@ -5,19 +5,25 @@ import java.util.List;
 import java.util.UUID;
 
 import com.alkemy.ong.dto.request.category.CategoryRequest;
-import com.alkemy.ong.dto.response.category.CategoryResponse;
+import com.alkemy.ong.dto.response.category.CategoryDetailsResponse;
+import com.alkemy.ong.dto.response.pagination.PageResultResponse;
+import com.alkemy.ong.dto.response.testimonial.TestimonialResponse;
 import com.alkemy.ong.exception.ResourceNotFoundException;
+import com.alkemy.ong.mappers.PageResultMapper;
+import com.alkemy.ong.models.Testimonial;
+import com.alkemy.ong.utils.ClassUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
-import com.alkemy.ong.dto.response.category.CategorySlimResponse;
+import com.alkemy.ong.dto.response.category.CategoryResponse;
 import com.alkemy.ong.mappers.CategoryMapper;
 import com.alkemy.ong.models.Category;
 import com.alkemy.ong.repositories.CategoryRepository;
 import com.alkemy.ong.services.ICategoryService;
 
 @Service
-public class CategoryServiceImpl implements ICategoryService{
+public class CategoryServiceImpl extends ClassUtils<Category, UUID> implements ICategoryService{
 
     @Autowired   
     private CategoryRepository categoryRepo;
@@ -25,17 +31,20 @@ public class CategoryServiceImpl implements ICategoryService{
     @Autowired
     private CategoryMapper categoryMapper;
 
-    private List<CategorySlimResponse> listaDto = new ArrayList<CategorySlimResponse>();
+    private final String PATH_CATEGORY = "http://localhost:8080/categories?page=%d";
 
     @Override
-    public List<CategorySlimResponse> categoryList() {
-        List<Category> lista = categoryRepo.findAll();
-        CategorySlimResponse categorySlimResponse = new CategorySlimResponse();
-        for (int i=0;i<lista.size();i++) {
-            categorySlimResponse = categoryMapper.categoryToCategorySlimResponse(lista.get(i));
-            listaDto.add(categorySlimResponse);
-        }    
-        return listaDto;
+    public PageResultResponse<CategoryResponse> getCategories(Integer pageNumber) {
+        Page<Category> page = categoryRepo.findAll(PageRequest.of(pageNumber-1, 10));
+        if(!page.hasContent()){
+            throw new ResourceNotFoundException();
+        }
+        List<CategoryResponse> categoryResponses = categoryMapper.entities2ListResponse(page.getContent());
+        String previous = getPrevious(PATH_CATEGORY, pageNumber);
+        String next = getNext(page, PATH_CATEGORY, pageNumber);
+
+        PageResultMapper<CategoryResponse> response = new PageResultMapper<>();
+        return response.mapPage(categoryResponses, previous, next);
     }
 
     @Override
@@ -50,11 +59,11 @@ public class CategoryServiceImpl implements ICategoryService{
     }
 
     @Override
-    public CategoryResponse update(UUID id, CategoryRequest categoryRequest) {
+    public CategoryDetailsResponse update(UUID id, CategoryRequest categoryRequest) {
         categoryRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Category", "id", id));
         Category category = categoryMapper.categoryRequestToCategory(categoryRequest);
         category.setId(id);
-        return categoryMapper.categoryToCategoryResponse(categoryRepo.save(category));
+        return categoryMapper.categoryToCategoryDetailsResponse(categoryRepo.save(category));
     }
 
     @Override
