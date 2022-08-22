@@ -34,19 +34,19 @@ public class CommentController {
 	@Autowired
 	private ICommentService commentService;
 
-	@PreAuthorize("hasRole('USER')")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
 	@GetMapping()
 	ResponseEntity<Page<CommentListResponse>> getAllComents(@PageableDefault(size = 10) Pageable pageable) {
 		return ResponseEntity.ok(commentService.getAllComents(pageable));
 	}
 
-	@PreAuthorize("hasRole('USER')")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
 	@PostMapping()
 	ResponseEntity<CommentResponse> create(@Valid @RequestBody CommentRequest commentRequest) {
 		return ResponseEntity.ok(commentService.save(commentRequest));
 	}
 
-	@PreAuthorize("hasRole('USER')")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
 	@PutMapping("/{id}")
 	@Transactional
 	public ResponseEntity<CommentResponse> update(@PathVariable UUID id,
@@ -56,8 +56,8 @@ public class CommentController {
 
 	@PreAuthorize("hasRole('USER')")
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> delete(@PathVariable UUID id,
-			@Valid @RequestBody CommentRequest commentRequest, HttpServletRequest httpServletRequest) {
+	public ResponseEntity<Void> delete(@PathVariable UUID id, @Valid @RequestBody CommentRequest commentRequest,
+			HttpServletRequest httpServletRequest) {
 		commentService.delete(id, commentRequest, httpServletRequest);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}

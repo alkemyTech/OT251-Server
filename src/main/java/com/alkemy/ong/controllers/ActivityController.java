@@ -19,13 +19,13 @@ public class ActivityController {
     @Autowired
     IActivityService activityService;
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<ActivityResponse> createActivity(@RequestBody @Valid ActivityRequest activityRequest){
         return ResponseEntity.status(HttpStatus.OK).body(activityService.create(activityRequest));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<ActivityResponse> updateActivity(@PathVariable UUID id, @RequestBody @Valid ActivityRequest activityRequest){
         return ResponseEntity.status(HttpStatus.OK).body(activityService.update(id, activityRequest));

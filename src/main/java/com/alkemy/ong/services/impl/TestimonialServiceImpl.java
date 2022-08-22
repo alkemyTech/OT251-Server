@@ -16,50 +16,70 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.util.List;
 import java.util.UUID;
 
 import static com.alkemy.ong.utils.ApiConstants.PATH_TESTIMONIALS;
 
 @Service
-public class TestimonialServiceImpl  extends ClassUtil<Testimonial, UUID, TestimonialRepository> implements ITestimonialService {
+public class TestimonialServiceImpl extends ClassUtil<Testimonial, UUID, TestimonialRepository>
+		implements ITestimonialService {
 
-    @Autowired
-    private TestimonialMapper testimonialMapper;
+	@Autowired
+	private TestimonialMapper testimonialMapper;
 
-    @Autowired
-    private TestimonialRepository testimonialRepo;
+	@Autowired
+	private TestimonialRepository testimonialRepo;
 
-    @Autowired
-    private AWSClientServiceImpl awsService;
+	@Autowired
+	private AWSClientServiceImpl awsService;
 
-    @Autowired
-    private ImageUtils imageUtils;
+	@Autowired
+	private ImageUtils imageUtils;
 
-    @Override
-    public TestimonialResponse createTestimonial(TestimonialRequest testimonialRequest) {
+	@Override
+	public TestimonialResponse createTestimonial(TestimonialRequest testimonialRequest) {
 
-        Testimonial testimonial = testimonialMapper.testimonialRequestToEntity(testimonialRequest);
+		Testimonial testimonial = testimonialMapper.testimonialRequestToEntity(testimonialRequest);
 
-        MultipartFile decodedImage = imageUtils.base64Image2MultipartFile(testimonialRequest.getImage());
-        testimonial.setImage(awsService.uploadFile(decodedImage));
+		MultipartFile decodedImage = imageUtils.base64Image2MultipartFile(testimonialRequest.getImage());
 
-        return testimonialMapper.mapTestimonialResponse(testimonialRepo.save(testimonial));
-    }
+		testimonial.setImage(awsService.uploadFile(decodedImage));
 
-    @Override
-    public PageResultResponse<TestimonialResponse> getAllTestimonials(Integer numberOfPage) {
-        Page<Testimonial> page = getPage(numberOfPage);
-        if(!page.hasContent()){
-            throw new ResourceNotFoundException();
-        }
-        List<TestimonialResponse> testimonialResponses = testimonialMapper.entities2ListResponse(page.getContent());
-        String previous = getPrevious(PATH_TESTIMONIALS, numberOfPage);
-        String next = getNext(page, PATH_TESTIMONIALS, numberOfPage);
+		return testimonialMapper.mapTestimonialResponse(testimonialRepo.save(testimonial));
+	}
 
-        PageResultMapper<TestimonialResponse> response = new PageResultMapper<>();
-        return response.mapPage(testimonialResponses, previous, next);
-    }
+	@Override
+	public void delete(UUID id) {
+		Testimonial testimonial = testimonialRepo.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Testimonial", "id", id));
+		testimonialRepo.delete(testimonial);
+	}
+
+	public TestimonialResponse update(UUID id, TestimonialRequest testimoniaRequest) {
+		Testimonial testimonial = testimonialRepo.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Testimonial", "id", id));
+
+		testimonial.setId(testimoniaRequest.getId());
+		testimonial.setName(testimoniaRequest.getName());
+		testimonial.setImage(testimoniaRequest.getImage());
+		testimonial.setContent(testimoniaRequest.getContent());
+
+		return testimonialMapper.mapTestimonialResponse(testimonialRepo.save(testimonial));
+	}
+
+	@Override
+	public PageResultResponse<TestimonialResponse> getAllTestimonials(Integer numberOfPage) {
+		Page<Testimonial> page = getPage(numberOfPage);
+		if (!page.hasContent()) {
+			throw new ResourceNotFoundException();
+		}
+		List<TestimonialResponse> testimonialResponses = testimonialMapper.entities2ListResponse(page.getContent());
+		String previous = getPrevious(PATH_TESTIMONIALS, numberOfPage);
+		String next = getNext(page, PATH_TESTIMONIALS, numberOfPage);
+
+		PageResultMapper<TestimonialResponse> response = new PageResultMapper<>();
+		return response.mapPage(testimonialResponses, previous, next);
+	}
 
 }

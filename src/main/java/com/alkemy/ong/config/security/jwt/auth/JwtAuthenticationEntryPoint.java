@@ -1,4 +1,4 @@
-package com.alkemy.ong.config.security.auth;
+package com.alkemy.ong.config.security.jwt.auth;
 
 import java.io.IOException;
 

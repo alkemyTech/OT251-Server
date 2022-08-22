@@ -35,7 +35,7 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.OK).body(memberService.updateMember(id, memberRequest));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteMember(@PathVariable UUID id){
         memberService.delete(id);

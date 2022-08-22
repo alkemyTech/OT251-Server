@@ -11,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.UUID;
 
 import static com.alkemy.ong.utils.ApiConstants.BOTH;
 
@@ -18,8 +19,8 @@ import static com.alkemy.ong.utils.ApiConstants.BOTH;
 @RequestMapping("/testimonials")
 public class TestimonialController {
 
-    @Autowired
-    private ITestimonialService testimonialService;
+	@Autowired
+	private ITestimonialService testimonialService;
 
     @GetMapping(path = "/get-all")
     @PreAuthorize(BOTH)
@@ -32,5 +33,19 @@ public class TestimonialController {
     public ResponseEntity<TestimonialResponse> createTestimonials(@RequestBody @Valid TestimonialRequest testimonialRequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(testimonialService.createTestimonial(testimonialRequest));
     }
+
+	@PreAuthorize("hasRole('ADMIN')")
+	@DeleteMapping(value = "/{id}")
+	public ResponseEntity<Void> deleteTestimonial(@PathVariable UUID id) {
+		testimonialService.delete(id);
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+	}
+
+	@PostMapping("/public")
+	public ResponseEntity<TestimonialResponse> updateTestimonial(
+			@RequestBody @Valid TestimonialRequest testimonialRequest) {
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(testimonialService.update(testimonialRequest.getId(), testimonialRequest));
+	}
 
 }
