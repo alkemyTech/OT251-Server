@@ -8,7 +8,6 @@ public interface ApiConstants {
     String BOTH = "hasAnyRole('ROLE_ADMIN','ROLE_USER')";
 
     //Paths
-
-    String PATH_TESTIMONIALS = "/get-all?page=%d";
+    String PATH_TESTIMONIALS = "http://localhost:8080/testimonials/get-all?page=%d";
 
 }

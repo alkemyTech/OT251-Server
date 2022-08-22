@@ -1,7 +1,7 @@
 package com.alkemy.ong.controllers;
 
 import com.alkemy.ong.dto.request.testimonial.TestimonialRequest;
-import com.alkemy.ong.dto.response.testimonial.TestimonialPageResponse;
+import com.alkemy.ong.dto.response.pagination.PageResultResponse;
 import com.alkemy.ong.dto.response.testimonial.TestimonialResponse;
 import com.alkemy.ong.services.ITestimonialService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +22,9 @@ public class TestimonialController {
     private ITestimonialService testimonialService;
 
     @GetMapping(path = "/get-all")
-    //@PreAuthorize(BOTH)
-    public ResponseEntity<TestimonialPageResponse> getTestimonials(@RequestParam(defaultValue = "1") Integer page) {
-        return ResponseEntity.ok(testimonialService.getAllTestimonials(page));
+    @PreAuthorize(BOTH)
+    public ResponseEntity<PageResultResponse<TestimonialResponse>> getTestimonials(@RequestParam(defaultValue = "1") Integer page) {
+        return ResponseEntity.status(HttpStatus.OK).body(testimonialService.getAllTestimonials(page));
     }
 
     @PreAuthorize("hasRole('ADMIN')")

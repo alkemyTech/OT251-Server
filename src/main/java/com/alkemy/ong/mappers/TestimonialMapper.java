@@ -1,7 +1,6 @@
 package com.alkemy.ong.mappers;
 
 import com.alkemy.ong.dto.request.testimonial.TestimonialRequest;
-import com.alkemy.ong.dto.response.testimonial.TestimonialPageResponse;
 import com.alkemy.ong.dto.response.testimonial.TestimonialResponse;
 import com.alkemy.ong.models.Testimonial;
 import org.springframework.stereotype.Component;
@@ -37,14 +36,6 @@ public class TestimonialMapper {
         return testimonialEntities.stream()
                 .map(this::mapTestimonialResponse)
                 .collect(Collectors.toList());
-    }
-
-    public TestimonialPageResponse entityPage2PageResponse(List<Testimonial> testimonials, String previous, String next){
-        return TestimonialPageResponse.builder()
-                .testimonials(entities2ListResponse(testimonials))
-                .next(next)
-                .previous(previous)
-                .build();
     }
 
 }
