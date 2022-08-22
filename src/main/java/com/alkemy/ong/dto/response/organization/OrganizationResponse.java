@@ -1,7 +1,6 @@
 package com.alkemy.ong.dto.response.organization;
 
 import com.alkemy.ong.dto.response.slides.SlidesDetailsResponse;
-import com.alkemy.ong.models.Slide;
 import lombok.Data;
 
 import java.util.List;

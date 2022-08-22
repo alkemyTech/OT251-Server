@@ -13,7 +13,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.alkemy.ong.config.security.auth.JwtTokenProvider;
+import com.alkemy.ong.config.security.jwt.utils.JwtTokenProvider;
 import com.alkemy.ong.dto.request.comment.CommentRequest;
 import com.alkemy.ong.dto.response.comment.CommentListResponse;
 import com.alkemy.ong.dto.response.comment.CommentResponse;
@@ -78,7 +78,7 @@ public class CommentServiceImpl implements ICommentService {
 	public CommentResponse update(UUID id, @Valid CommentRequest commentRequest,
 			HttpServletRequest httpServletRequest) {
 		String token = httpServletRequest.getHeader("Authorization").substring(7);
-		String email = jwtTokenProvider.GetUsernameJWT(token);
+		String email = jwtTokenProvider.getUsernameJWT(token);
 		List<String> roles = jwtTokenProvider.extractRoles(token);
 
 		if (validUser(email, id) || isAdmin(roles)) {
@@ -98,7 +98,7 @@ public class CommentServiceImpl implements ICommentService {
 	@Override
 	public void delete(UUID id, @Valid CommentRequest commentRequest, HttpServletRequest httpServletRequest) {
 		String token = httpServletRequest.getHeader("Authorization").substring(7);
-		String email = jwtTokenProvider.GetUsernameJWT(token);
+		String email = jwtTokenProvider.getUsernameJWT(token);
 		List<String> roles = jwtTokenProvider.extractRoles(token);
 
 		if (validUser(email, id) || isAdmin(roles)) {

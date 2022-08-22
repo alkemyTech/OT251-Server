@@ -30,32 +30,32 @@ public class SlideController {
 	@Autowired
 	private ISlideService slideService;
 
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@PostMapping
 	public ResponseEntity<Void> createSlide(@RequestBody @Valid SlideCreateRequest SlideRequest) {
 		slideService.create(SlideRequest);
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@GetMapping
 	public ResponseEntity<List<SlideResponse>> getAll() {
 		return ResponseEntity.status(HttpStatus.OK).body(slideService.getAll());
 	}
 
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<SlidesDetailsResponse> getById(@PathVariable UUID id) {
 		return ResponseEntity.status(HttpStatus.OK).body(slideService.getById(id));
 	}
 
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@PostMapping("/public")
 	public ResponseEntity<SlidesDetailsResponse> updateSlide(@RequestBody @Valid SlideRequest slideRequest) {
 		return ResponseEntity.status(HttpStatus.OK).body(slideService.update(slideRequest.getId(), slideRequest));
 	}
 
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<Void> deleteSlides(@PathVariable UUID id) {
 		slideService.delete(id);

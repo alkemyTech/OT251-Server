@@ -24,15 +24,15 @@ public class DataBaseInitialization implements CommandLineRunner {
     @Override
     public void run(String...args) throws Exception {
 
-        if(roleRepo.findByName("USER") == null){
+        if(roleRepo.findByName("ROLE_USER") == null){
             Role user = new Role();
-            user.setName("USER");
+            user.setName("ROLE_USER");
             user.setDescription("User default.");
             roleRepo.save(user);
         }
-        if(roleRepo.findByName("ADMIN") == null){
+        if(roleRepo.findByName("ROLE_ADMIN") == null){
             Role admin = new Role();
-            admin.setName("ADMIN");
+            admin.setName("ROLE_ADMIN");
             admin.setDescription("User with administrator permissions.");
             roleRepo.save(admin);
         }
