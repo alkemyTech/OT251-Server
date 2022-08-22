@@ -1,8 +1,6 @@
 package com.alkemy.ong.controllers;
 
-import com.alkemy.ong.dto.request.organization.OrganizationRequest;
 import com.alkemy.ong.dto.request.testimonial.TestimonialRequest;
-import com.alkemy.ong.dto.response.organization.OrganizationResponse;
 import com.alkemy.ong.dto.response.testimonial.TestimonialResponse;
 import com.alkemy.ong.services.ITestimonialService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,19 +16,28 @@ import java.util.UUID;
 @RequestMapping("/testimonials")
 public class TestimonialController {
 
-    @Autowired
-    private ITestimonialService testimonialService;
+	@Autowired
+	private ITestimonialService testimonialService;
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping
-    public ResponseEntity<TestimonialResponse> createTestimonials(@RequestBody @Valid TestimonialRequest testimonialRequest) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(testimonialService.createTestimonial(testimonialRequest));
-    }
+	@PreAuthorize("hasRole('ADMIN')")
+	@PostMapping
+	public ResponseEntity<TestimonialResponse> createTestimonials(
+			@RequestBody @Valid TestimonialRequest testimonialRequest) {
+		return ResponseEntity.status(HttpStatus.CREATED).body(testimonialService.createTestimonial(testimonialRequest));
+	}
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/public")
-    public ResponseEntity<TestimonialResponse> updateTestimonial(@RequestBody @Valid TestimonialRequest testimonialRequest){
-        return ResponseEntity.status(HttpStatus.OK).body(testimonialService.update(testimonialRequest.getId(), testimonialRequest));
-    }
+	@PreAuthorize("hasRole('ADMIN')")
+	@DeleteMapping(value = "/{id}")
+	public ResponseEntity<Void> deleteTestimonial(@PathVariable UUID id) {
+		testimonialService.delete(id);
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+	}
+
+	@PostMapping("/public")
+	public ResponseEntity<TestimonialResponse> updateTestimonial(
+			@RequestBody @Valid TestimonialRequest testimonialRequest) {
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(testimonialService.update(testimonialRequest.getId(), testimonialRequest));
+	}
 
 }
