@@ -57,7 +57,7 @@ public class NewsController {
 		return ResponseEntity.status(HttpStatus.OK).body(newsServices.update(id, newsRequest));
 	}
 
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+
 	@GetMapping("/{id}/comments")
 	public ResponseEntity<Page<CommentListResponse>> listCommentsByNewsId(@PageableDefault(size = 10) Pageable pageable,
 			@PathVariable(value = "id") UUID id) {
