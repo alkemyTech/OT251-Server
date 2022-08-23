@@ -63,7 +63,8 @@ public class MailSenderServiceImpl implements IMailSenderService{
             request.setMethod(Method.POST);
             request.setEndpoint("mail/send");
             request.setBody(mail.build());
-//          Response response = sendGrid.api(request);
+            Response response = sendGrid.api(request);
+            System.out.println("Email sent successfully");
         } catch (IOException e) {
             System.out.println("Error trying to send email");
         }

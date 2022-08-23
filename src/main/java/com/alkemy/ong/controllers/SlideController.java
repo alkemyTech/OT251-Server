@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import javax.validation.Valid;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,7 @@ import com.alkemy.ong.services.ISlideService;
 
 @RestController
 @RequestMapping("/slides")
+@Tag(name = "Slides", description = "Slides controller")
 public class SlideController {
 
 	@Autowired

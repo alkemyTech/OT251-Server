@@ -4,27 +4,27 @@ import java.util.UUID;
 
 import com.alkemy.ong.models.Category;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
 public class NewsResponse {
 
-	@ApiModelProperty(name = "id", position = 0, value="News ID", dataType="UUID",example="ea23b87b-207c-4261-90e2-1780a550c0c1")
+	@Schema(name = "id", description="News ID", type="UUID",example="ea23b87b-207c-4261-90e2-1780a550c0c1")
 	private UUID id;
 
-	@ApiModelProperty(name = "name", position = 1, value="News name", dataType="String",example="New News... ")
+	@Schema(name = "name", description="News name", type="String",example="New News... ")
 	private String name;
 
-	@ApiModelProperty(name = "content", position = 2, value="News content", dataType="String",example="News description...")
+	@Schema(name = "content", description="News content", type="String",example="News description...")
 	private String content;
 
-	@ApiModelProperty(name = "image", position = 3, value="News image", dataType="String",example="newsImage.jpg")
+	@Schema(name = "image", description="News image", type="String",example="newsImage.jpg")
 	private String image;
 
-	@ApiModelProperty(name = "category", position = 4, value="News category", dataType="Category")
+	@Schema(name = "category", description="News category", type="Category")
 	private Category category;
 
-	@ApiModelProperty(name = "type", position = 5, value="News type", dataType="String",example="news")
+	@Schema(name = "type", description="News type", type="String",example="news")
 	private String type;
 }

@@ -4,6 +4,7 @@ package com.alkemy.ong.controllers;
 import javax.validation.Valid;
 
 import com.alkemy.ong.services.ISlideService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,16 +22,17 @@ import com.alkemy.ong.services.IOrganizationService;
 
 @RestController
 @RequestMapping("/organization")
+@Tag(name = "Organizations", description = "Organizations controller")
 public class OrganizationController {
 
     @Autowired
-    IOrganizationService orgServ;
+    private IOrganizationService orgServ;
 
     @Autowired
-    OrganizationMapper organizationMapper;
+    private OrganizationMapper organizationMapper;
 
     @Autowired
-    ISlideService slideService;
+    private ISlideService slideService;
 
     @GetMapping("/public")
     public ResponseEntity<OrganizationResponse> infoOrganization() {
