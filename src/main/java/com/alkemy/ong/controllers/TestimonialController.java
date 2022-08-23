@@ -4,6 +4,7 @@ import com.alkemy.ong.dto.request.testimonial.TestimonialRequest;
 import com.alkemy.ong.dto.response.pagination.PageResultResponse;
 import com.alkemy.ong.dto.response.testimonial.TestimonialResponse;
 import com.alkemy.ong.services.ITestimonialService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import static com.alkemy.ong.utils.ApiConstants.BOTH;
 
 @RestController
 @RequestMapping("/testimonials")
+@Tag(name = "Testimonials", description = "Testimonials controller")
 public class TestimonialController {
 
 	@Autowired

@@ -5,11 +5,12 @@ import java.util.UUID;
 
 import javax.validation.Valid;
 
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import com.alkemy.ong.dto.response.category.CategoryResponse;
 import com.alkemy.ong.dto.response.pagination.PageResultResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +28,7 @@ import com.alkemy.ong.services.INewsServices;
 
 @RestController
 @RequestMapping("/news")
+@Tag(name = "News", description = "News controller")
 public class NewsController {
 
 	@Autowired
@@ -35,30 +37,33 @@ public class NewsController {
 	@Autowired
 	private ICommentService commentService;
 
-	@ApiOperation(value = "Method to create a News", notes = "Save a new News item in the database and return it")
+	@Operation(summary = "Method to create a News", description = "Save a new News item in the database and return it")
+	@SecurityRequirement(name = "Bearer Authentication")
 	@ApiResponses(value = {
-			@ApiResponse(code = 201, message = "CREATED - News create successfully"),
-			@ApiResponse(code = 400, message = "BAD REQUEST - Param invalid")})
+			@ApiResponse(responseCode = "201", description = "CREATED - News create successfully"),
+			@ApiResponse(responseCode = "400", description = "BAD REQUEST - Param invalid")})
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@PostMapping
 	public ResponseEntity<NewsResponse> createNews(@RequestBody @Valid NewsRequest newsRequest) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(newsServices.createNews(newsRequest));
 	}
 
-	@ApiOperation(value = "Method to get a News by ID", notes = "Return News details if the ID exist")
+	@Operation(summary = "Method to get a News by ID", description = "Return News details if the ID exist")
+	@SecurityRequirement(name = "Bearer Authentication")
 	@ApiResponses(value = {
-			@ApiResponse(code = 200, message = "OK - Return News details"),
-			@ApiResponse(code = 404, message = "NOT FOUND - A News with that ID is Not Found")})
+			@ApiResponse(responseCode = "200", description = "OK - Return News details"),
+			@ApiResponse(responseCode = "404", description = "NOT FOUND - A News with that ID is Not Found")})
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@GetMapping("/{id}")
 	public ResponseEntity<NewsResponse> getNewsById(@PathVariable UUID id) {
 		return ResponseEntity.status(HttpStatus.OK).body(newsServices.getById(id));
 	}
 
-	@ApiOperation(value = "Method to delete a News by ID", notes = "Delete a News if the ID exist")
+	@Operation(summary = "Method to delete a News by ID", description = "Delete a News if the ID exist")
+	@SecurityRequirement(name = "Bearer Authentication")
 	@ApiResponses(value = {
-			@ApiResponse(code = 204, message = "NO CONTENT - News delete successfully"),
-			@ApiResponse(code = 404, message = "NOT FOUND - A News with that ID is Not Found")})
+			@ApiResponse(responseCode = "204", description = "NO CONTENT - News delete successfully"),
+			@ApiResponse(responseCode = "404", description = "NOT FOUND - A News with that ID is Not Found")})
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deleteNews(@PathVariable UUID id) {
@@ -66,11 +71,12 @@ public class NewsController {
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 
-	@ApiOperation(value = "Method to update a News by ID", notes = "Update a News if the ID exist")
+	@Operation(summary = "Method to update a News by ID", description = "Update a News if the ID exist")
+	@SecurityRequirement(name = "Bearer Authentication")
 	@ApiResponses(value = {
-			@ApiResponse(code = 200, message = "OK - News update successfully"),
-			@ApiResponse(code = 400, message = "BAD REQUEST - Param invalid"),
-			@ApiResponse(code = 404, message = "NOT FOUND - A News with that ID is Not Found")})
+			@ApiResponse(responseCode = "200", description = "OK - News update successfully"),
+			@ApiResponse(responseCode = "400", description = "BAD REQUEST - Param invalid"),
+			@ApiResponse(responseCode = "404", description = "NOT FOUND - A News with that ID is Not Found")})
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@PutMapping("/{id}")
 	public ResponseEntity<NewsResponse> updateNews(@PathVariable UUID id, @RequestBody @Valid NewsRequest newsRequest) {
@@ -78,16 +84,20 @@ public class NewsController {
 	}
 
 
-	@ApiOperation(value = "Method to Get the comments for a News", notes = "Get the comments for a News if the ID(News) exist")
+	@Operation(summary = "Method to Get the comments for a News", description = "Get the comments for a News if the ID(News) exist")
 	@ApiResponses(value = {
-			@ApiResponse(code = 200, message = "OK - Return comments"),
-			@ApiResponse(code = 404, message = "NOT FOUND - A News with that ID is Not Found")})
+			@ApiResponse(responseCode = "200", description = "OK - Return comments"),
+			@ApiResponse(responseCode = "404", description = "NOT FOUND - A News with that ID is Not Found")})
 	@GetMapping("/{id}/comments")
 	public ResponseEntity<Page<CommentListResponse>> listCommentsByNewsId(@PageableDefault(size = 10) Pageable pageable,
 			@PathVariable(value = "id") UUID id) {
 		return ResponseEntity.ok(commentService.getCommentsByNewsId(id, pageable));
 	}
 
+	@Operation(summary = "Method to get all news", description = "Get a page of news if they exist")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "OK - Return a page of news"),
+			@ApiResponse(responseCode = "404", description = "NOT FOUND - No news found")})
 	@GetMapping
 	public ResponseEntity<PageResultResponse<NewsResponse>> getAllNews(@RequestParam(defaultValue = "1") Integer page){
 		return ResponseEntity.status(HttpStatus.OK).body(newsServices.getNewsList(page));

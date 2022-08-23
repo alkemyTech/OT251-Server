@@ -3,6 +3,7 @@ package com.alkemy.ong.controllers;
 import com.alkemy.ong.dto.request.activity.ActivityRequest;
 import com.alkemy.ong.dto.response.activity.ActivityResponse;
 import com.alkemy.ong.services.IActivityService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +15,11 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/activities")
+@Tag(name = "Activities", description = "Activities controller")
 public class ActivityController {
 
     @Autowired
-    IActivityService activityService;
+    private IActivityService activityService;
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping

@@ -55,14 +55,13 @@ public class UserAuthServiceImpl implements IUserAuthService {
 	public JWTAuthResonseDTO register(UserRegisterRequest userRegister) {
 		if (userRepository.existsByEmail(userRegister.getEmail())) {
 			throw new EmailAlreadyExistsException(
-					"There is an account with that email adress:" + userRegister.getEmail());
+					"There's already an account with that email address:" + userRegister.getEmail());
 		}
-		emailService.sendMailRegister(userRegister.getEmail());
 
 		User user = userMapper.mapModel(userRegister);
 
 		Set<Role> roles = new HashSet<>();
-		Role role = roleRepository.findByName("ROLE_ADMIN");
+		Role role = roleRepository.findByName("ROLE_USER");
 		roles.add(role);
 		user.setRoles(roles);
 

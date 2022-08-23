@@ -5,6 +5,7 @@ import java.util.UUID;
 import com.alkemy.ong.services.IUserAuthService;
 import com.alkemy.ong.dto.request.user.UserUpdateRequest;
 import com.alkemy.ong.dto.response.user.UserResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +18,7 @@ import com.alkemy.ong.services.IUserService;
 
 @RestController
 @RequestMapping("/users")
+@Tag(name = "Users", description = "Users controller")
 public class UserController {
 
 	@Autowired

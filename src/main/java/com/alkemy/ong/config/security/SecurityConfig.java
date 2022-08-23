@@ -47,7 +47,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			"/api/docs/**",
 			"/api/docs/swagger-ui",
 			"/**/swagger-ui/**",
-			"/swagger-ui"
+			"/swagger-ui",
+			"/swagger-ui/**"
 	};
 
 	@Override
@@ -56,6 +57,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.csrf().disable()
 				.exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
 				.authorizeRequests()
+				.antMatchers(swaggerEndpoints).permitAll()
 				/*/activities*/
 				.antMatchers(HttpMethod.POST,"/activities").hasRole("ADMIN")
 				.antMatchers(HttpMethod.PUT,"/activities/{id}").hasRole("ADMIN")

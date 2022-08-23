@@ -5,6 +5,7 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +30,7 @@ import com.alkemy.ong.services.ICommentService;
 
 @RestController
 @RequestMapping("/comments")
+@Tag(name = "Comments", description = "Comments controller")
 public class CommentController {
 
 	@Autowired
@@ -36,13 +38,13 @@ public class CommentController {
 
 	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
 	@GetMapping()
-	ResponseEntity<Page<CommentListResponse>> getAllComents(@PageableDefault(size = 10) Pageable pageable) {
+	public ResponseEntity<Page<CommentListResponse>> getAllComents(@PageableDefault(size = 10) Pageable pageable) {
 		return ResponseEntity.ok(commentService.getAllComents(pageable));
 	}
 
 	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
 	@PostMapping()
-	ResponseEntity<CommentResponse> create(@Valid @RequestBody CommentRequest commentRequest) {
+	public ResponseEntity<CommentResponse> create(@Valid @RequestBody CommentRequest commentRequest) {
 		return ResponseEntity.ok(commentService.save(commentRequest));
 	}
 
