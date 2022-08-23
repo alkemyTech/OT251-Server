@@ -60,7 +60,6 @@ public class TestimonialServiceImpl extends ClassUtil<Testimonial, UUID, Testimo
 		Testimonial testimonial = testimonialRepo.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Testimonial", "id", id));
 
-		testimonial.setId(testimoniaRequest.getId());
 		testimonial.setName(testimoniaRequest.getName());
 		testimonial.setImage(testimoniaRequest.getImage());
 		testimonial.setContent(testimoniaRequest.getContent());
